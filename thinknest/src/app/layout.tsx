@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import "./globals.css";
-import Header from "@/app/header/Header";
-import Navbar from "@/app/navbar/NavBar";
+import Header from "@/app/Header/Header";
+import Navbar from "@/app/Navbar/NavBar";
 
 export const metadata: Metadata = {
   title: "ThinkNest",
@@ -16,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap"
