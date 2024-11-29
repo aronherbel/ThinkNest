@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header/Header";
-import Navbar from "@/components/NavBar/NavBar";
+import Header from "@/app/header/Header";
+import Navbar from "@/app/navbar/NavBar";
 
 export const metadata: Metadata = {
   title: "ThinkNest",
@@ -24,10 +24,10 @@ export default function RootLayout({
       <body className="h-full">
         <Header />
         <div className="flex h-screen">
-          <div className="w-64 h-full text-sm">
+          <div className="w-44 h-full text-sm">
             <Navbar />
           </div>
-          <main className="flex-1 bg-[#F9F9F9]">
+          <main className="flex-1 bg-[#F9F9F9] rounded-tl-[1rem]">
             {children}
           </main>
         </div>

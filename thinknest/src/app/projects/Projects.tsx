@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Todo = () => {
+const Projects = () => {
   return (
     <div>
-      ToDo
+      Project
     </div>
   )
 }
 
-export default Todo
+export default Projects
