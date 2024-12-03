@@ -1,17 +1,17 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
+import Timer from "@/app/dashboard/components/timer";
 
 const Dashboard: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
   useEffect(() => {
     setCurrentTime(new Date());
-    const timer = setInterval(() => {
+    const timerInterval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => clearInterval(timerInterval);
   }, []);
 
   const formatDateTime = (date: Date) => {
@@ -27,12 +27,15 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="pl-10 pt-10">
+    <div className="pl-10 pt-10 pr-10 flex justify-between">
+      <div className="flex flex-col">
         <div className="text-3xl font-bold">Today</div>
-        <div className="mt-2 text-sm">{currentTime ? formatDateTime(currentTime) : "Loading..."}</div>
+        <div className="mt-2 text-sm">
+          {currentTime ? formatDateTime(currentTime) : "Loading..."}
+        </div>
       </div>
-    </>
+      <Timer />
+    </div>
   );
 };
 
