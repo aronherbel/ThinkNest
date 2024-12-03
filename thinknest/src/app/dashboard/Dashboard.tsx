@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Timer from "@/app/dashboard/components/timer";
+import Timer from "./components/Timer";
 
 const Dashboard: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
