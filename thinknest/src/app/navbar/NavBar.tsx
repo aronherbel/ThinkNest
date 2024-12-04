@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from 'next/image';
 
 const NavBar = () => {
   const pathname = usePathname();
@@ -32,7 +33,7 @@ const NavBar = () => {
                 isActive ? "bg-black text-white" : "hover:bg-[#DAD9D9]"
               }`}
             >
-              <img src={iconPath} alt={label} className="w-3 h-3" />
+              <Image src={iconPath} alt={label} width={10} height={10} />
               <Link href={href}>{label}</Link>
             </div>
           );
