@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Image from 'next/image';
 
 const Timer = () => {
   /* TODO: Der Timer sollte vom Calender die aktuellen werte bzw. Zeit ausgeben 
@@ -36,7 +37,7 @@ const Timer = () => {
     <>
       <div className="flex items-center space-x-4 bg-white p-3 rounded-xl">
         <div className="flex items-center justify-center text-black text-sm mr-3 ml-3">
-          {isTimerRunning && timer !== null ? formatTime(timer) : "Start Timer"}
+          {isTimerRunning && timer !== null ? formatTime(timer) : "EventTimer"}
         </div>
         <button
           onClick={startTimer}
@@ -45,10 +46,12 @@ const Timer = () => {
             isTimerRunning ? "bg-red-500" : "bg-[#28AD5E]"
           } p-3 text-white rounded-xl flex items-center justify-center`}
         >
-          <img
+          <Image
             src="/assets/icons/play_icon.svg"
             alt="play_icon"
-            className="w-4 h-4 m-1"
+            className="m-1"
+            width={12}
+            height={12}
           />
         </button>
       </div>
