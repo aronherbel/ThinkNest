@@ -18,7 +18,7 @@ const NavBar = () => {
   ];
 
   return (
-    <div className="flex justify-center align-items-center mt-12 text-sm">
+    <div className="flex justify-center align-items-center mt-5 text-sm">
       <div className="flex flex-col items-start space-y-4">
         {navItems.map(({ href, icon, label }) => {
           const isActive = pathname === href;

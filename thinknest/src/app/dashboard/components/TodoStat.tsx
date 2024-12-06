@@ -42,7 +42,7 @@ const TodoStat = () => {
             </div>
           </div>
         </div>
-        <div className="absolute right-4 bottom-4">
+        <div className="absolute right-8 bottom-8">
           <Link href="/todo">
             <button className="py-3 px-4 bg-black text-white text-xs font-medium rounded-lg">
               View All
