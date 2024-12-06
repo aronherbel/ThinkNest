@@ -9,7 +9,7 @@ type DashboardStatsProps = {
 
 const DashboardStats: React.FC<DashboardStatsProps>  = ({ value, iconPath, label }) => {
   return (
-    <div className="bg-white rounded-xl min-w-[16rem]">
+    <div className="bg-white rounded-xl min-w-[16rem] mx-7 ">
       <div className="px-4 py-3">
         <div className="flex justify-between text-md">
           <p>{label}</p>
@@ -18,6 +18,7 @@ const DashboardStats: React.FC<DashboardStatsProps>  = ({ value, iconPath, label
             alt="menu_icon"
             width={3}
             height={3}
+            className="cursor-pointer"
           />
         </div>
         <div className="flex items-center justify-between mt-5">

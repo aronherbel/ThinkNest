@@ -4,21 +4,22 @@ import Link from "next/link";
 
 const TodoStat = () => {
   return (
-    <div className="bg-white rounded-xl min-w-[28rem] relative">
-      <div className="px-4 py-4">
-        <div className="flex justify-between text-md mb-3">
+    <div className="bg-white rounded-xl min-w-[35rem] relative">
+      <div className="px-8 py-8">
+        <div className="flex justify-between text-semibold mb-4 text-lg">
           <p>To Do</p>
           <Image
             src="/assets/icons/lilmenu_icon.svg"
             alt="menu_icon"
-            width={3}
-            height={3}
+            width={4}
+            height={4}
+            className="cursor-pointer"
           />
         </div>
-        <p className="text-xs text-[#9A9A9A] font-semibold">To Dos</p>
+        <p className="text-sm text-[#9A9A9A] font-semibold">To Dos</p>
 
         {/* Task List */}
-        <div className="space-y-4 pt-4">
+        <div className="space-y-4 pt-6">
           {/* Task 1 */}
           <div className="border-[0.5px] border-[#F1F1F1] rounded-xl">
             <div className="flex items-center justify-between p-2">
