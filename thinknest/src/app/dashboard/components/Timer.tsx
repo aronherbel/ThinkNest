@@ -4,7 +4,7 @@ import Image from 'next/image';
 const Timer = () => {
   /* TODO: Der Timer sollte vom Calender die aktuellen werte bzw. Zeit ausgeben 
              wie lange ein jetziges Event nocht braucht bis es fertig ist
-    */
+  */
 
   const [timer, setTimer] = useState<number | null>(null);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -35,8 +35,8 @@ const Timer = () => {
 
   return (
     <>
-      <div className="flex items-center space-x-4 bg-white p-3 rounded-xl">
-        <div className="flex items-center justify-center text-black text-sm mr-3 ml-3">
+      <div className="flex items-center space-x-3 bg-white p-3 rounded-xl">
+        <div className="flex items-center justify-center text-black text-sm mr-2 ml-2">
           {isTimerRunning && timer !== null ? formatTime(timer) : "EventTimer"}
         </div>
         <button
@@ -44,14 +44,14 @@ const Timer = () => {
           disabled={isTimerRunning}
           className={`${
             isTimerRunning ? "bg-red-500" : "bg-[#28AD5E]"
-          } p-3 text-white rounded-xl flex items-center justify-center`}
+          } p-2 text-white rounded-md flex items-center justify-center`}
         >
           <Image
             src="/assets/icons/play_icon.svg"
             alt="play_icon"
             className="m-1"
-            width={12}
-            height={12}
+            width={10}
+            height={10}
           />
         </button>
       </div>
