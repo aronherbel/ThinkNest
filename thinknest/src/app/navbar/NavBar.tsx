@@ -18,7 +18,7 @@ const NavBar = () => {
   ];
 
   return (
-    <div className="flex justify-center mt-5 text-[0.7rem]">
+    <div className="flex justify-center align-items-center mt-12 text-sm">
       <div className="flex flex-col items-start space-y-4">
         {navItems.map(({ href, icon, label }) => {
           const isActive = pathname === href;
@@ -32,7 +32,7 @@ const NavBar = () => {
                   isActive ? "bg-black text-white" : "hover:bg-[#DAD9D9]"
                 }`}
               >
-                <Image src={iconPath} alt={label} width={10} height={10} />
+                <Image src={iconPath} alt={label} width={14} height={14} />
                 <Link href={href} className="flex-1 text-left">
                   {label}
                 </Link>

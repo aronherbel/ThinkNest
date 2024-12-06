@@ -44,7 +44,7 @@ const Dashboard = () => {
         <Timer />
       </div>
 
-      <div className=" flex justify-between mb-10">
+      <div className=" flex justify-center mb-10">
         <WorkedToday />
         <WeeklyActivity />
         <RemainingWeek />

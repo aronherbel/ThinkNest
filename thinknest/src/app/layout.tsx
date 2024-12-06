@@ -27,11 +27,11 @@ export default function RootLayout({
           <Header />
         </div>
 
-        <div className="flex h-screen pt-[4rem]"> 
-          <div className="fixed h-full w-44">
+        <div className="flex h-screen pt-[5rem]"> 
+          <div className="fixed h-full w-[12.5rem]">
             <Navbar />
           </div>
-          <main className="flex-1 ml-44 bg-[#F9F9F9] rounded-tl-[1rem] overflow-y-scroll px-10 py-10">
+          <main className="flex-1 ml-56 bg-[#F9F9F9] rounded-tl-[1rem] overflow-y-scroll px-14 py-12">
             {children}
           </main>
         </div>
