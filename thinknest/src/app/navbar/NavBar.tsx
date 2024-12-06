@@ -25,18 +25,19 @@ const NavBar = () => {
           const iconPath = isActive
             ? `/assets/icons/${icon.replace(".svg", "_active.svg")}`
             : `/assets/icons/${icon}`;
-
-          return (
-            <div
-              key={href}
-              className={`flex items-center space-x-3 p-2 rounded ${
-                isActive ? "bg-black text-white" : "hover:bg-[#DAD9D9]"
-              }`}
-            >
-              <Image src={iconPath} alt={label} width={10} height={10} />
-              <Link href={href}>{label}</Link>
-            </div>
-          );
+            return (
+              <div
+                key={href}
+                className={`flex items-center space-x-3 p-2 rounded w-full m-1 ${
+                  isActive ? "bg-black text-white" : "hover:bg-[#DAD9D9]"
+                }`}
+              >
+                <Image src={iconPath} alt={label} width={10} height={10} />
+                <Link href={href} className="flex-1 text-left">
+                  {label}
+                </Link>
+              </div>
+            );
         })}
       </div>
     </div>

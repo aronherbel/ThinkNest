@@ -4,9 +4,11 @@ import Timer from "./components/Timer";
 import WeeklyActivity from "./components/WeeklyActivity";
 import WorkedToday from "./components/WorkedToday";
 import RemainingWeek from "./components/RemainingToday";
+import CalenderStat from "./components/CalenderStat";
+import TodoStat from "./components/TodoStat";
 
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <div className="pl-10 pt-10 pr-10 flex justify-between">
+      <div className="mb-10 flex justify-between">
         <div className="flex flex-col">
           <div className="text-3xl font-bold">Today</div>
           <div className="mt-2 text-sm">
@@ -42,13 +44,17 @@ const Dashboard: React.FC = () => {
         <Timer />
       </div>
 
-      <div className=" flex justify-between p-10">
-          {/* <DashboardStats /> */}
-          
-          <WorkedToday />
-          <WeeklyActivity />
-          <RemainingWeek />
+      <div className=" flex justify-between mb-10">
+        <WorkedToday />
+        <WeeklyActivity />
+        <RemainingWeek />
       </div>
+
+      <div className="flex justify-between space-x-4">
+        <CalenderStat />
+        <TodoStat />
+      </div>
+
     </>
   );
 };
