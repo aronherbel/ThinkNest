@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link"; // Link importieren
 
-const CalenderStat = () => {
+const CalendarStat = () => {
   return (
     <>
       <div className="bg-white rounded-xl min-w-[35rem] relative"> 
@@ -49,7 +49,7 @@ const CalenderStat = () => {
                 </div>
               </div>
               <div className=" flex justify-end">
-                <Link href="/calender">
+                <Link href="/calendar">
                   <button className="py-3 px-4 bg-black text-white text-xs font-medium rounded-lg">
                     View All
                   </button>
@@ -63,4 +63,4 @@ const CalenderStat = () => {
   );
 };
 
-export default CalenderStat;
+export default CalendarStat;

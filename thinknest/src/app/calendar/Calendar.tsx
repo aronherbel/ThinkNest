@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import "./calendarstyle.css"; 
+import "./calendarstyle.css";
 
 const Calendar: React.FC = () => {
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
@@ -47,16 +47,24 @@ const Calendar: React.FC = () => {
     setIsDialogOpen(true);
   };
 
-  const handleRightClick = (event: EventApi, e: React.MouseEvent) => {
+  const handleRightClick = (event: EventApi | null, e: React.MouseEvent) => {
     e.preventDefault();
-    setContextMenu({ visible: true, x: e.clientX, y: e.clientY, event });
+    if (event) {
+      setContextMenu({ visible: true, x: e.clientX, y: e.clientY, event });
+    } else {
+      setContextMenu({ visible: false, x: 0, y: 0, event: null });
+    }
   };
 
   const handleDeleteEvent = () => {
-    if (contextMenu.event) {
-      contextMenu.event.remove();
+    if (contextMenu?.event) {
+      try {
+        contextMenu.event.remove(); // Löschen des Events
+        setContextMenu({ visible: false, x: 0, y: 0, event: null });
+      } catch (error) {
+        console.error("Fehler beim Löschen des Events", error);
+      }
     }
-    setContextMenu({ visible: false, x: 0, y: 0, event: null });
   };
 
   const handleCloseDialog = () => {
@@ -95,6 +103,7 @@ const Calendar: React.FC = () => {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           initialView="timeGridWeek"
+          firstDay={1}
           editable={true}
           selectable={true}
           selectMirror={true}
@@ -107,6 +116,13 @@ const Calendar: React.FC = () => {
               : []
           }
           nowIndicator={true}
+          slotDuration="00:30:00"
+          slotLabelInterval="01:00:00"
+          slotLabelFormat={{
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }}
           views={{
             timeGridWeek: {
               nowIndicator: true,
@@ -119,35 +135,81 @@ const Calendar: React.FC = () => {
             code: "de",
             allDayText: "",
           }}
+          titleFormat={{
+            year: "numeric",
+            month: "long", // Zeigt nur Monat und Jahr an
+          }}
           eventContent={(args: EventContentArg) => {
             const { event } = args;
+
+            if (!event?.start || !event?.end) {
+              return (
+                <div className="cursor-context-menu relative">
+                  No Event Details
+                </div>
+              );
+            }
+
+            const startDate = new Date(event.start).toLocaleString("de-DE", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const endDate = new Date(event.end).toLocaleString("de-DE", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            if (event.allDay) {
+              return (
+                <div
+                  onContextMenu={(e) => handleRightClick(event, e)}
+                  className="cursor-context-menu relative"
+                >
+                  <div className="flex flex-col justify-start text-black">
+                    <div className="text-md font-medium">{event.title}</div>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <div
                 onContextMenu={(e) => handleRightClick(event, e)}
                 className="cursor-context-menu relative"
               >
-                {event.title}
+                <div className="flex flex-col justify-start text-black">
+                  <div className="text-md font-medium">{event.title}</div>
+                  <div className="text-sm">{`${startDate} - ${endDate}`}</div>
+                </div>
               </div>
             );
           }}
           dayHeaderContent={(args) => {
             const date = args.date;
-            const weekday = new Intl.DateTimeFormat("de-DE", {
-              weekday: "long",
+            const today = new Date();
+            const isToday =
+              date.getFullYear() === today.getFullYear() &&
+              date.getMonth() === today.getMonth() &&
+              date.getDate() === today.getDate();
+
+            const weekdayShort = new Intl.DateTimeFormat("en-US", {
+              weekday: "short",
             }).format(date);
-            const day = new Intl.DateTimeFormat("de-DE", { day: "numeric" }).format(date);
+
+            const day = new Intl.DateTimeFormat("de-DE", {
+              day: "numeric",
+            }).format(date);
 
             return (
-              <div className="text-center">
-                <div>{weekday}</div>
-                <div>{day}</div>
+              <div className="text-center day-header">
+                <div>{weekdayShort.toUpperCase()}</div>
+                {isToday ? (
+                  <div className="day-number">{day}</div>
+                ) : (
+                  <div>{day}</div>
+                )}
               </div>
             );
-          }}
-          slotLabelFormat={{
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
           }}
         />
       </div>

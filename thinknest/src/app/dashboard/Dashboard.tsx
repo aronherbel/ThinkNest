@@ -4,7 +4,7 @@ import Timer from "./components/Timer";
 import WeeklyActivity from "./components/WeeklyActivity";
 import WorkedToday from "./components/WorkedToday";
 import RemainingWeek from "./components/RemainingToday";
-import CalenderStat from "./components/CalenderStat";
+import CalendarStat from "./components/CalendarStat";
 import TodoStat from "./components/TodoStat";
 
 
@@ -51,7 +51,7 @@ const Dashboard = () => {
       </div>
 
       <div className="flex justify-between space-x-4">
-        <CalenderStat />
+        <CalendarStat />
         <TodoStat />
       </div>
 
