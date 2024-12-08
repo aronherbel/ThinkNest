@@ -10,7 +10,7 @@ const NavBar = () => {
 
   const navItems = [
     { href: "/dashboard", icon: "dashboard_icon.svg", label: "Dashboard" },
-    { href: "/calender", icon: "calender_icon.svg", label: "Calendar" },
+    { href: "/calendar", icon: "calendar_icon.svg", label: "Calendar" },
     { href: "/todo", icon: "todo_icon.svg", label: "Todo" },
     { href: "/notes", icon: "notes_icon.svg", label: "Notes" },
     { href: "/projects", icon: "project_icon.svg", label: "Projects" },

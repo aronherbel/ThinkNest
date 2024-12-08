@@ -1,0 +1,49 @@
+.fc-day-today {
+  background-color: transparent !important;
+}
+
+.fc-day-today .day-header {
+  color: #28AD5E; 
+  font-weight: bold; 
+}
+
+.fc-day-today .day-number {
+  background-color: #28AD5E; 
+  color: white; 
+  border-radius: 50%; 
+  display: inline-block;
+  width: 30px; 
+  height: 30px;
+  line-height: 30px; 
+  text-align: center; 
+  margin-top: 4px;
+}
+
+.day-header {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center; 
+  font-size: 14px;
+}
+
+.day-header > div:first-child {
+  margin-bottom: 4px;
+}
+
+.cursor-context-menu {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex;
+    background-color: #4285f4; 
+    color: white;
+    border-radius: 4px;
+    padding: 0 4px;
+    box-sizing: border-box;
+  }
+
+  .fc-timegrid-slot {
+    height: 1rem !important; /* Stelle sicher, dass nur die Höhe für den sichtbaren Bereich berücksichtigt wird */
+  }
+  
+  

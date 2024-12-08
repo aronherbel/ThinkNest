@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 
 const Timer = () => {
-  /* TODO: Der Timer sollte vom Calender die aktuellen werte bzw. Zeit ausgeben 
+  /* TODO: Der Timer sollte vom Calendar die aktuellen werte bzw. Zeit ausgeben 
              wie lange ein jetziges Event nocht braucht bis es fertig ist
   */
 
