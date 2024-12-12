@@ -1,39 +1,21 @@
 "use client";
+
 import { useState } from "react";
 import { registerUser } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
-  // Validierung der Eingaben
-  const validateInputs = () => {
-    if (!email || !password) {
-      return "Please enter both email and password.";
-    }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      return "Please enter a valid email address.";
-    }
-    if (password.length < 6) {
-      return "Password must be at least 6 characters.";
-    }
-    return null;
-  };
+  const router = useRouter();
 
   const handleSignUp = () => {
-    const validationError = validateInputs();
-    if (validationError) {
-      setMessage(validationError);
-      return;
-    }
-
-    const response = registerUser(email, password);
-
-    if (response) {
-      setMessage("Registration successful!");
+    const successful = registerUser(email, password);
+    if (successful) {
+      router.push("/auth/login"); // Weiterleitung zur Login-Seite
     } else {
-      setMessage("Registration failed. Please try again.");
+      setMessage("User already exists.");
     }
   };
 
@@ -42,9 +24,7 @@ export default function SignUp() {
       <div className="bg-white shadow-lg rounded-lg p-6 w-96">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Sign Up</h1>
         {message && (
-          <p className={`text-sm mb-4 ${message.includes("successful") ? "text-green-600" : "text-red-600"}`}>
-            {message}
-          </p>
+          <p className="text-red-600 mb-4">{message}</p>
         )}
         <input
           type="email"
@@ -66,6 +46,15 @@ export default function SignUp() {
         >
           Sign Up
         </button>
+        <p className="text-center mt-4 text-gray-600">
+          Already have an account? 
+          <span 
+            onClick={() => router.push("/auth/login")}
+            className="text-green-500 hover:text-green-600 cursor-pointer underline"
+          >
+            Log in here
+          </span>
+        </p>
       </div>
     </div>
   );

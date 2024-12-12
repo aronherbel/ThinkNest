@@ -1,18 +1,21 @@
 "use client";
+
 import { useState } from "react";
 import { loginUser } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleLogin = () => {
     const successful = loginUser(email, password);
     if (successful) {
-      setMessage("Login successful!");
+      router.push("/dashboard"); // Weiterleitung zur Dashboard-Seite
     } else {
-      setMessage("Invalid password or Username");
+      setMessage("Invalid username or password.");
     }
   };
 
@@ -21,9 +24,7 @@ export default function Login() {
       <div className="bg-white shadow-lg rounded-lg p-6 w-96">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Login</h1>
         {message && (
-          <p className={`text-sm mb-4 ${message.includes("successful") ? "text-green-600" : "text-red-600"}`}>
-            {message}
-          </p>
+          <p className="text-red-600 mb-4">{message}</p>
         )}
         <input
           type="email"
@@ -45,6 +46,15 @@ export default function Login() {
         >
           Login
         </button>
+        <p className="text-center mt-4 text-gray-600">
+          Don't have an account yet? 
+          <span 
+            onClick={() => router.push("/auth/signup")}
+            className="text-green-500 hover:text-green-600 cursor-pointer underline"
+          >
+            Sign up here
+          </span>
+        </p>
       </div>
     </div>
   );

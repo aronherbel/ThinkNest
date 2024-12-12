@@ -1,27 +1,32 @@
-// lib/auth.ts
 import { users } from './users';
-import { redirect } from 'next/navigation';
 
-export const isAuthenticated = false;
+export const isAuthenticated = (): boolean => {
+  // Authentifizierungsstatus aus localStorage überprüfen
+  return !!localStorage.getItem("authToken");
+};
 
 export const registerUser = (email: string, password: string): boolean => {
-  const userExists: boolean = users.some((user) => user.email === email);
-  
+  const userExists = users.some((user) => user.email === email);
+
   if (userExists) {
-    return false;
+    return false; // User existiert bereits
   }
-  else{
-    users.push({ email, password });
-    redirect('/auth/login');
-  }  
+
+  users.push({ email, password });
+  return true; // Registrierung erfolgreich
 };
 
 export const loginUser = (email: string, password: string): boolean => {
   const user = users.find((user) => user.email === email && user.password === password);
 
-  if (user == null) {
-    return false;
+  if (user) {
+    localStorage.setItem("authToken", "example-token"); // Authentifizierung simulieren
+    return true; // Login erfolgreich
   }
-  redirect('/dashboard');
+
+  return false; // Login fehlgeschlagen
 };
 
+export const logoutUser = (): void => {
+  localStorage.removeItem("authToken"); // Token entfernen
+};
