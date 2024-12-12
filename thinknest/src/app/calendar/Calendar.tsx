@@ -13,7 +13,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import "./calendarstyle.css";
+import "./calendarstyle.scss";
+import HeaderTitle from "@/components/HeaderTitle";
+import MyEvents from "./components/MyEvents";
 
 const Calendar: React.FC = () => {
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
@@ -59,7 +61,7 @@ const Calendar: React.FC = () => {
   const handleDeleteEvent = () => {
     if (contextMenu?.event) {
       try {
-        contextMenu.event.remove(); // Löschen des Events
+        contextMenu.event.remove();
         setContextMenu({ visible: false, x: 0, y: 0, event: null });
       } catch (error) {
         console.error("Fehler beim Löschen des Events", error);
@@ -93,7 +95,11 @@ const Calendar: React.FC = () => {
 
   return (
     <>
-      <div>
+      <HeaderTitle title="Calendar" />
+
+      <MyEvents />
+
+      <div className="bg-white rounded-xl p-8">
         <FullCalendar
           height={"85vh"}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -106,6 +112,7 @@ const Calendar: React.FC = () => {
           firstDay={1}
           editable={true}
           selectable={true}
+          scrollTime={new Date().toISOString().slice(11, 19)}
           selectMirror={true}
           dayMaxEvents={true}
           select={handleDateClick}
@@ -137,7 +144,7 @@ const Calendar: React.FC = () => {
           }}
           titleFormat={{
             year: "numeric",
-            month: "long", // Zeigt nur Monat und Jahr an
+            month: "long",
           }}
           eventContent={(args: EventContentArg) => {
             const { event } = args;
@@ -236,19 +243,19 @@ const Calendar: React.FC = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Event Details</DialogTitle>
+            <DialogTitle>Event Details</DialogTitle>
           </DialogHeader>
-          <form className="space-x-3 mb-4" onSubmit={handleAddEvent}>
+          <form className="space-x-3" onSubmit={handleAddEvent}>
             <input
               type="text"
               placeholder="Event Title"
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)}
               required
-              className="border border-gray-300 px-3 py-2 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 px-3 py-2 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-[#28AD5E]"
             />
             <button
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 cursor-pointer"
+              className="bg-black text-white py-2 px-4 rounded cursor-pointer"
               type="submit"
             >
               Add

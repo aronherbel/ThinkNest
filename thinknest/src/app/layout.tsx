@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import "./globals.css";
-import Header from "@/app/Header/Header";
-import Navbar from "@/app/Navbar/NavBar";
+import Header from "@/app/header/Header";
+import Navbar from "@/app/navbar/NavBar";
 
 export const metadata: Metadata = {
   title: "ThinkNest",
