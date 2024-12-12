@@ -1,9 +1,10 @@
+import HeaderTitle from '@/components/HeaderTitle'
 import React from 'react'
 
 const Notes = () => {
   return (
     <div>
-      Notes
+      <HeaderTitle title="Notes"/>
     </div>
   )
 }

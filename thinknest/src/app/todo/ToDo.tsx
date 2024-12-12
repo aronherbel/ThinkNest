@@ -1,9 +1,10 @@
+import HeaderTitle from '@/components/HeaderTitle'
 import React from 'react'
 
 const ToDo = () => {
   return (
     <div>
-      ToDo
+      <HeaderTitle title="To Do"/>
     </div>
   )
 }

@@ -2,12 +2,12 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const TodoStat = () => {
+const ProjectStat = () => {
   return (
     <div className="bg-white rounded-xl min-w-[35rem] relative">
       <div className="px-8 py-8">
         <div className="flex justify-between text-semibold mb-4 text-lg">
-          <p>To Do</p>
+          <p>Projects</p>
           <Image
             src="/assets/icons/lilmenu_icon.svg"
             alt="menu_icon"
@@ -16,7 +16,7 @@ const TodoStat = () => {
             className="cursor-pointer"
           />
         </div>
-        <p className="text-sm text-[#9A9A9A] font-semibold">To Dos</p>
+        <p className="text-sm text-[#9A9A9A] font-semibold">Project</p>
 
         {/* Task List */}
         <div className="space-y-4 pt-6">
@@ -26,7 +26,7 @@ const TodoStat = () => {
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-green-100 text-green-600 flex items-center justify-center rounded-full">
                   <Image
-                    src="/assets/icons/todo_icon_active.svg"
+                    src="/assets/icons/project_icon_active.svg"
                     alt="todo_icon"
                     width={12}
                     height={12}
@@ -43,7 +43,7 @@ const TodoStat = () => {
           </div>
         </div>
         <div className="absolute right-8 bottom-8">
-          <Link href="/todo">
+          <Link href="/projects">
             <button className="py-3 px-4 bg-black text-white text-xs font-medium rounded-lg">
               View All
             </button>
@@ -54,4 +54,4 @@ const TodoStat = () => {
   );
 };
 
-export default TodoStat;
+export default ProjectStat;
