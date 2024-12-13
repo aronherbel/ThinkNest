@@ -10,7 +10,7 @@ type Event = {
 const MyEvents = () => {
   const [eventsCategorys, setEventsCategorys] = useState<Event[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isAddingEvent, setIsAddingEvent] = useState(false);
+  const [isAddingEventCategory, setIsAddingEventCategory] = useState(false);
   const [eventCategoryName, setEventCategoryName] = useState("");
   const [eventColor, setEventColor] = useState("#28AD5E");
 
@@ -18,11 +18,11 @@ const MyEvents = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const handleAddEvent = () => {
-    setIsAddingEvent(true);
+  const handleAddEventCategory = () => {
+    setIsAddingEventCategory(true);
   };
 
-  const handleCreateEvent = () => {
+  const handleCreateEventCategory = () => {
     if (eventCategoryName.trim() === "") return;
     const newEvent: Event = {
       name: eventCategoryName,
@@ -32,7 +32,7 @@ const MyEvents = () => {
     setEventsCategorys((prev) => [...prev, newEvent]);
     setEventCategoryName("");
     setEventColor("#000000");
-    setIsAddingEvent(false);
+    setIsAddingEventCategory(false);
     setIsDropdownOpen(true);
   };
 
@@ -44,15 +44,17 @@ const MyEvents = () => {
     );
   };
 
-  const handleDeleteEvent = (index: number) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+  const handleDeleteEventCategory = (index: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this event?"
+    );
     if (confirmDelete) {
       setEventsCategorys((prev) => prev.filter((_, i) => i !== index));
     }
   };
 
   const handleCloseDialog = () => {
-    setIsAddingEvent(false);
+    setIsAddingEventCategory(false);
   };
 
   const colors = [
@@ -76,7 +78,7 @@ const MyEvents = () => {
               width={30}
               height={30}
               className="hover:bg-gray-200 p-2 rounded-md cursor-pointer"
-              onClick={handleAddEvent}
+              onClick={handleAddEventCategory}
             />
             <Image
               src={
@@ -94,7 +96,7 @@ const MyEvents = () => {
         </div>
 
         {/* Add Event Form */}
-        {isAddingEvent && (
+        {isAddingEventCategory && (
           <div className="bg-gray-100 p-4 rounded-lg w-full space-y-4">
             <input
               type="text"
@@ -117,6 +119,7 @@ const MyEvents = () => {
                 />
               ))}
             </div>
+
             <div className="flex justify-between gap-2">
               <button
                 type="button"
@@ -128,7 +131,7 @@ const MyEvents = () => {
               <button
                 type="submit"
                 className="bg-black text-white text-xs px-4 py-2 rounded-md"
-                onClick={handleCreateEvent}
+                onClick={handleCreateEventCategory}
               >
                 Add
               </button>
@@ -166,7 +169,7 @@ const MyEvents = () => {
                       width={20}
                       height={20}
                       className="opacity-0 group-hover:opacity-100 hover:bg-gray-400 rounded-md cursor-pointer transition-opacity duration-200"
-                      onClick={() => handleDeleteEvent(index)}
+                      onClick={() => handleDeleteEventCategory(index)}
                     />
                   </li>
                 ))}

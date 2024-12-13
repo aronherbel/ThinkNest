@@ -98,11 +98,11 @@ const Calendar: React.FC = () => {
 
   const handleAddEvent = (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (newEventTitle && (isAllDay || (startDate && endDate))) {
       const calendarApi = selectedDate?.view.calendar;
       calendarApi?.unselect();
-  
+
       const newEvent = {
         id: `${startDate}-${newEventTitle}`, // Eindeutige ID
         title: newEventTitle, // Event-Titel
@@ -112,14 +112,11 @@ const Calendar: React.FC = () => {
         location, // Zusätzliche Eigenschaften können je nach deiner Implementierung ignoriert werden
         description,
       };
-  
+
       calendarApi?.addEvent(newEvent); // Event zum Kalender hinzufügen
       handleCloseDialog();
     }
   };
-  
-  
-  
 
   return (
     <>
@@ -203,15 +200,25 @@ const Calendar: React.FC = () => {
           }}
           eventContent={(args: EventContentArg) => {
             const { event } = args;
-          
-            // Überprüfe, ob ein Titel vorhanden ist
-            if (!event?.title) {
-              return (
-                <div className="cursor-context-menu relative">
-                  No Event Details
-                </div>
-              );
-            }
+
+            const startDate = event.start
+              ? event.allDay
+                ? new Date(event.start).toLocaleDateString("de-DE")
+                : new Date(event.start).toLocaleString("de-DE", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+              : "";
+
+            const endDate = event.end
+              ? event.allDay
+                ? new Date(event.end).toLocaleDateString("de-DE")
+                : new Date(event.end).toLocaleString("de-DE", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+              : "";
+
             return (
               <div
                 onContextMenu={(e) => handleRightClick(event, e)}
@@ -219,6 +226,9 @@ const Calendar: React.FC = () => {
               >
                 <div className="flex flex-col justify-start text-black">
                   <div className="text-md font-medium">{event.title}</div>
+                  {!event.allDay && (
+                    <div className="text-sm">{`${startDate} - ${endDate}`}</div>
+                  )}
                 </div>
               </div>
             );
@@ -243,142 +253,160 @@ const Calendar: React.FC = () => {
         </div>
       )}
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Event Details</DialogTitle>
-          </DialogHeader>
-          <form className="space-y-4" onSubmit={handleAddEvent}>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Event Title
-              </label>
-              <input
-                type="text"
-                placeholder="Event Title"
-                value={newEventTitle}
-                onChange={(e) => setNewEventTitle(e.target.value)}
-                required
-                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-              />
-            </div>
+<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Event Details</DialogTitle>
+    </DialogHeader>
+    <form className="space-y-4" onSubmit={handleAddEvent}>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Event Title
+        </label>
+        <input
+          type="text"
+          placeholder="Event Title"
+          value={newEventTitle}
+          onChange={(e) => setNewEventTitle(e.target.value)}
+          required
+          className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+        />
+      </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Start Date & Time
-              </label>
-              <div className="flex gap-4">
-                <input
-                  type="date"
-                  value={startDate.split("T")[0]}
-                  onChange={(e) =>
-                    setStartDate(
-                      `${e.target.value}T${startDate.split("T")[1] || "00:00"}`
-                    )
-                  }
-                  required
-                  className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-                />
-                {!isAllDay && (
-                  <input
-                    type="time"
-                    value={startDate.slice(11, 16)}
-                    onChange={(e) =>
-                      setStartDate(
-                        `${startDate.split("T")[0]}T${e.target.value}`
-                      )
-                    }
-                    required
-                    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-                  />
-                )}
-              </div>
-            </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Start Date & Time
+        </label>
+        <div className="flex gap-4">
+          <input
+            type="date"
+            value={startDate.split("T")[0]}
+            onChange={(e) =>
+              setStartDate(
+                `${e.target.value}T${startDate.split("T")[1] || "00:00"}`
+              )
+            }
+            required
+            className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+          />
+          {!isAllDay && (
+            <input
+              type="time"
+              value={startDate.slice(11, 16)}
+              onChange={(e) =>
+                setStartDate(
+                  `${startDate.split("T")[0]}T${e.target.value}`
+                )
+              }
+              required
+              className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+            />
+          )}
+        </div>
+      </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                End Date & Time
-              </label>
-              <div className="flex gap-4">
-                <input
-                  type="date"
-                  value={endDate.split("T")[0]}
-                  onChange={(e) =>
-                    setEndDate(
-                      `${e.target.value}T${endDate.split("T")[1] || "23:59"}`
-                    )
-                  }
-                  required
-                  className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-                />
-                {!isAllDay && (
-                  <input
-                    type="time"
-                    value={endDate.slice(11, 16)}
-                    onChange={(e) =>
-                      setEndDate(`${endDate.split("T")[0]}T${e.target.value}`)
-                    }
-                    required
-                    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-                  />
-                )}
-              </div>
-            </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          End Date & Time
+        </label>
+        <div className="flex gap-4">
+          <input
+            type="date"
+            value={endDate.split("T")[0]}
+            onChange={(e) =>
+              setEndDate(
+                `${e.target.value}T${endDate.split("T")[1] || "23:59"}`
+              )
+            }
+            required
+            className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+          />
+          {!isAllDay && (
+            <input
+              type="time"
+              value={endDate.slice(11, 16)}
+              onChange={(e) =>
+                setEndDate(`${endDate.split("T")[0]}T${e.target.value}`)
+              }
+              required
+              className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+            />
+          )}
+        </div>
+      </div>
 
-            <div className="flex gap-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  onChange={() => setIsAllDay(!isAllDay)}
-                  checked={isAllDay}
-                />
-                <span className="text-sm">All Day</span>
-              </div>
-            </div>
+      <div className="flex gap-4">
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            onChange={() => setIsAllDay(!isAllDay)}
+            checked={isAllDay}
+          />
+          <span className="text-sm">All Day</span>
+        </div>
+      </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location
-              </label>
-              <input
-                type="text"
-                placeholder="Event Location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-              />
-            </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Location
+        </label>
+        <input
+          type="text"
+          placeholder="Event Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+        />
+      </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
-              </label>
-              <textarea
-                placeholder="Event Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-              />
-            </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Description
+        </label>
+        <textarea
+          placeholder="Event Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+        />
+      </div>
 
-            <div className="flex justify-between gap-2">
-              <button
-                type="button"
-                onClick={handleCloseDialog}
-                className="border border-gray-300 text-gray-600 px-6 py-2 rounded-lg"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-black text-white px-6 py-2 rounded-lg"
-              >
-                Add
-              </button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          My Event's
+        </label>
+        <select
+          className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+          required
+        >
+          <option value="">Event Category</option>
+          <option value="work">Work</option>
+          <option value="personal">Personal</option>
+          <option value="birthday">Birthday</option>
+          <option value="meeting">Meeting</option>
+          <option value="holiday">Holiday</option>
+        </select>
+      </div>
+
+      <div className="flex justify-between gap-2">
+        <button
+          type="button"
+          onClick={handleCloseDialog}
+          className="border border-gray-300 text-gray-600 px-6 py-2 rounded-lg"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="bg-black text-white px-6 py-2 rounded-lg"
+        >
+          Add
+        </button>
+      </div>
+    </form>
+  </DialogContent>
+</Dialog>
+
     </>
   );
 };
