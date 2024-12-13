@@ -10,7 +10,27 @@ export default function SignUp() {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
+  const validateInputs = () => {
+    if (!email || !password) {
+      return "Email and password are required.";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Invalid email format.";
+    }
+    if (password.length < 6) {
+      return "Password must be at least 6 characters long.";
+    }
+    return null;
+  };
+
   const handleSignUp = () => {
+    const validationError = validateInputs();
+    if (validationError) {
+      setMessage(validationError);
+      return;
+    }
+
     const successful = registerUser(email, password);
     if (successful) {
       router.push("/auth/login"); // Weiterleitung zur Login-Seite
