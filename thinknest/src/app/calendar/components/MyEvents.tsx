@@ -51,6 +51,10 @@ const MyEvents = () => {
     }
   };
 
+  const handleCloseDialog = () => {
+    setIsAddingEvent(false);
+  };
+
   const colors = [
     "#03c995",
     "#5e2bea",
@@ -113,12 +117,22 @@ const MyEvents = () => {
                 />
               ))}
             </div>
-            <button
-              onClick={handleCreateEvent}
-              className="bg-black text-white text-xs px-4 py-2 rounded-md"
-            >
-              Create Event
-            </button>
+            <div className="flex justify-between gap-2">
+              <button
+                type="button"
+                onClick={handleCloseDialog}
+                className="border border-gray-300 text-gray-600 text-xs px-4 py-2 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-black text-white text-xs px-4 py-2 rounded-md"
+                onClick={handleCreateEvent}
+              >
+                Add
+              </button>
+            </div>
           </div>
         )}
 
