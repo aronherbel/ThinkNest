@@ -160,6 +160,33 @@ const Calendar: React.FC = () => {
             year: "numeric",
             month: "long",
           }}
+          dayHeaderContent={(args) => {
+            const date = args.date;
+            const today = new Date();
+            const isToday =
+              date.getFullYear() === today.getFullYear() &&
+              date.getMonth() === today.getMonth() &&
+              date.getDate() === today.getDate();
+
+            const weekdayShort = new Intl.DateTimeFormat("en-US", {
+              weekday: "short",
+            }).format(date);
+
+            const day = new Intl.DateTimeFormat("de-DE", {
+              day: "numeric",
+            }).format(date);
+
+            return (
+              <div className="text-center day-header">
+                <div>{weekdayShort.toUpperCase()}</div>
+                {isToday ? (
+                  <div className="day-number">{day}</div>
+                ) : (
+                  <div>{day}</div>
+                )}
+              </div>
+            );
+          }}
           eventContent={(args: EventContentArg) => {
             const { event } = args;
 
