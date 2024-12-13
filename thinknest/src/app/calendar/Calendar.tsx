@@ -50,10 +50,24 @@ const Calendar: React.FC = () => {
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
-    setStartDate(selected.start.toISOString().slice(0, 16));
-    setEndDate(selected.end?.toISOString().slice(0, 16) || "");
+  
+    // Konvertiere Zeit in lokales Format
+    const localStart = new Date(selected.start).toLocaleString("sv-SE", {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      hour12: false,
+    });
+    const localEnd = selected.end
+      ? new Date(selected.end).toLocaleString("sv-SE", {
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          hour12: false,
+        })
+      : "";
+  
+    setStartDate(localStart.replace(" ", "T"));
+    setEndDate(localEnd.replace(" ", "T"));
     setIsDialogOpen(true);
   };
+  
 
   const handleRightClick = (event: EventApi | null, e: React.MouseEvent) => {
     e.preventDefault();
@@ -88,25 +102,22 @@ const Calendar: React.FC = () => {
     if (newEventTitle && (isAllDay || (startDate && endDate))) {
       const calendarApi = selectedDate?.view.calendar;
       calendarApi?.unselect();
-
+  
       const newEvent = {
         id: `${startDate}-${newEventTitle}`,
         title: newEventTitle,
-        start: isAllDay
-          ? new Date(startDate).setHours(0, 0, 0, 0)
-          : new Date(startDate),
-        end: isAllDay
-          ? new Date(endDate).setHours(23, 59, 59, 999)
-          : new Date(endDate),
+        start: new Date(startDate), // Keine UTC-Anpassung nötig
+        end: new Date(endDate),
         allDay: isAllDay,
         location,
         description,
       };
-
+  
       calendarApi?.addEvent(newEvent);
       handleCloseDialog();
     }
   };
+  
 
   return (
     <>
@@ -154,8 +165,9 @@ const Calendar: React.FC = () => {
           }}
           locale={{
             code: "de",
-            allDayText: "",
+            allDayText: ""
           }}
+          timeZone="local"
           titleFormat={{
             year: "numeric",
             month: "long",
@@ -168,7 +180,7 @@ const Calendar: React.FC = () => {
               date.getMonth() === today.getMonth() &&
               date.getDate() === today.getDate();
 
-            const weekdayShort = new Intl.DateTimeFormat("en-US", {
+            const weekdayShort = new Intl.DateTimeFormat("de-DE", {
               weekday: "short",
             }).format(date);
 
@@ -273,7 +285,7 @@ const Calendar: React.FC = () => {
               <div className="flex gap-4">
                 <input
                   type="date"
-                  value={startDate.split("T")[0]} // Nur das Datum extrahieren
+                  value={startDate.split("T")[0]} 
                   onChange={(e) =>
                     setStartDate(
                       `${e.target.value}T${startDate.split("T")[1] || "00:00"}`
