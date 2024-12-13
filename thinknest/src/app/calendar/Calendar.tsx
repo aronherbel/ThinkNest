@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 import React, { useState, useEffect } from "react";
 import { DateSelectArg, EventApi, EventContentArg } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
@@ -28,9 +27,11 @@ const Calendar: React.FC = () => {
     y: number;
     event: EventApi | null;
   }>({ visible: false, x: 0, y: 0, event: null });
-  const [isAllDay, setIsAllDay] = useState<boolean>(false); // Zustand für All-Day Event
+  const [isAllDay, setIsAllDay] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,8 +50,8 @@ const Calendar: React.FC = () => {
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
-    setStartDate(selected.start.toISOString().slice(0, 16)); // Format für datetime-local
-    setEndDate(selected.end?.toISOString().slice(0, 16) || ""); // Optional: Ende kann leer sein
+    setStartDate(selected.start.toISOString().slice(0, 16));
+    setEndDate(selected.end?.toISOString().slice(0, 16) || "");
     setIsDialogOpen(true);
   };
 
@@ -77,7 +78,9 @@ const Calendar: React.FC = () => {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setNewEventTitle("");
-    setIsAllDay(false); // Setze All-Day zurück
+    setIsAllDay(false);
+    setLocation("");
+    setDescription("");
   };
 
   const handleAddEvent = (e: React.FormEvent) => {
@@ -89,9 +92,15 @@ const Calendar: React.FC = () => {
       const newEvent = {
         id: `${startDate}-${newEventTitle}`,
         title: newEventTitle,
-        start: isAllDay ? new Date(startDate).setHours(0, 0, 0, 0) : new Date(startDate),
-        end: isAllDay ? new Date(endDate).setHours(23, 59, 59, 999) : new Date(endDate),
+        start: isAllDay
+          ? new Date(startDate).setHours(0, 0, 0, 0)
+          : new Date(startDate),
+        end: isAllDay
+          ? new Date(endDate).setHours(23, 59, 59, 999)
+          : new Date(endDate),
         allDay: isAllDay,
+        location,
+        description,
       };
 
       calendarApi?.addEvent(newEvent);
@@ -153,7 +162,7 @@ const Calendar: React.FC = () => {
           }}
           eventContent={(args: EventContentArg) => {
             const { event } = args;
-          
+
             if (!event?.start || !event?.end) {
               return (
                 <div className="cursor-context-menu relative">
@@ -161,29 +170,28 @@ const Calendar: React.FC = () => {
                 </div>
               );
             }
-          
+
             const startDate = event.allDay
               ? new Date(event.start).toLocaleDateString("de-DE")
               : new Date(event.start).toLocaleString("de-DE", {
                   hour: "2-digit",
                   minute: "2-digit",
                 });
-          
+
             const endDate = event.allDay
               ? new Date(event.end).toLocaleDateString("de-DE")
               : new Date(event.end).toLocaleString("de-DE", {
                   hour: "2-digit",
                   minute: "2-digit",
                 });
-          
-            // Beide Fälle behandeln, All-Day und normale Events
+
             return (
               <div
                 onContextMenu={(e) => handleRightClick(event, e)}
                 className="cursor-context-menu relative"
               >
                 <div className="flex flex-col justify-start text-black">
-                  <div className="text-md font-medium">{event.title}</div> {/* Sicherstellen, dass der Titel angezeigt wird */}
+                  <div className="text-md font-medium">{event.title}</div>
                   {!event.allDay && (
                     <div className="text-sm">{`${startDate} - ${endDate}`}</div>
                   )}
@@ -194,7 +202,6 @@ const Calendar: React.FC = () => {
         />
       </div>
 
-      {/* Context Menu for deleting events */}
       {contextMenu.visible && (
         <div
           className="absolute bg-white border border-gray-300 rounded-md shadow-md z-50 p-2"
@@ -212,7 +219,6 @@ const Calendar: React.FC = () => {
         </div>
       )}
 
-      {/* Dialog for adding new events */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -252,9 +258,11 @@ const Calendar: React.FC = () => {
                 {!isAllDay && (
                   <input
                     type="time"
-                    value={startDate.slice(11, 16)} // Nur die Uhrzeit extrahieren
+                    value={startDate.slice(11, 16)}
                     onChange={(e) =>
-                      setStartDate(`${startDate.split("T")[0]}T${e.target.value}`)
+                      setStartDate(
+                        `${startDate.split("T")[0]}T${e.target.value}`
+                      )
                     }
                     required
                     className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
@@ -270,10 +278,10 @@ const Calendar: React.FC = () => {
               <div className="flex gap-4">
                 <input
                   type="date"
-                  value={endDate.split("T")[0]} // Nur das Datum extrahieren
+                  value={endDate.split("T")[0]}
                   onChange={(e) =>
                     setEndDate(
-                      `${e.target.value}T${endDate.split("T")[1] || "00:00"}`
+                      `${e.target.value}T${endDate.split("T")[1] || "23:59"}`
                     )
                   }
                   required
@@ -282,7 +290,7 @@ const Calendar: React.FC = () => {
                 {!isAllDay && (
                   <input
                     type="time"
-                    value={endDate.slice(11, 16)} // Nur die Uhrzeit extrahieren
+                    value={endDate.slice(11, 16)}
                     onChange={(e) =>
                       setEndDate(`${endDate.split("T")[0]}T${e.target.value}`)
                     }
@@ -293,30 +301,55 @@ const Calendar: React.FC = () => {
               </div>
             </div>
 
-            <div>
-              <label className="flex items-center space-x-2">
+            <div className="flex gap-4">
+              <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   checked={isAllDay}
                   onChange={() => setIsAllDay(!isAllDay)}
                 />
-                <span>All Day Event</span>
-              </label>
+                <span className="text-sm">All Day</span>
+              </div>
             </div>
 
-            <div className="mt-6 flex gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Location
+              </label>
+              <input
+                type="text"
+                placeholder="Event Location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <textarea
+                placeholder="Event Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+              />
+            </div>
+
+            <div className="flex justify-between gap-2">
               <button
                 type="button"
                 onClick={handleCloseDialog}
-                className="w-full text-white bg-gray-500 py-2 px-4 rounded-md"
+                className="border border-gray-300 text-gray-600 px-6 py-2 rounded-lg"
               >
-                Close
+                Cancel
               </button>
               <button
                 type="submit"
-                className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+                className="bg-black text-white px-6 py-2 rounded-lg"
               >
-                Add Event
+                Add
               </button>
             </div>
           </form>

@@ -3,8 +3,8 @@
 }
 
 .fc-day-today .day-header {
-  color: #28ad5e ;
-  font-weight: bold ;
+  color: #28ad5e;
+  font-weight: bold;
 }
 
 .fc-day-today .day-number {
@@ -42,6 +42,10 @@
   box-sizing: border-box;
 }
 
+.fc-button{
+  background-color: black !important;
+}
+
 .fc-timegrid-slot {
   height: 0.5rem !important;
 }
@@ -61,5 +65,3 @@
 .fc-timegrid-slot-lane {
   height: 0.5rem !important;
 }
-
-
