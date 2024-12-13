@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from "react";
 import { DateSelectArg, EventApi, EventContentArg } from "@fullcalendar/core";
@@ -28,6 +28,9 @@ const Calendar: React.FC = () => {
     y: number;
     event: EventApi | null;
   }>({ visible: false, x: 0, y: 0, event: null });
+  const [isAllDay, setIsAllDay] = useState<boolean>(false); // Zustand für All-Day Event
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -46,6 +49,8 @@ const Calendar: React.FC = () => {
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
+    setStartDate(selected.start.toISOString().slice(0, 16)); // Format für datetime-local
+    setEndDate(selected.end?.toISOString().slice(0, 16) || ""); // Optional: Ende kann leer sein
     setIsDialogOpen(true);
   };
 
@@ -72,23 +77,24 @@ const Calendar: React.FC = () => {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setNewEventTitle("");
+    setIsAllDay(false); // Setze All-Day zurück
   };
 
   const handleAddEvent = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newEventTitle && selectedDate) {
-      const calendarApi = selectedDate.view.calendar;
-      calendarApi.unselect();
+    if (newEventTitle && (isAllDay || (startDate && endDate))) {
+      const calendarApi = selectedDate?.view.calendar;
+      calendarApi?.unselect();
 
       const newEvent = {
-        id: `${selectedDate.start.toISOString()}-${newEventTitle}`,
+        id: `${startDate}-${newEventTitle}`,
         title: newEventTitle,
-        start: selectedDate.start,
-        end: selectedDate.end,
-        allDay: selectedDate.allDay,
+        start: isAllDay ? new Date(startDate).setHours(0, 0, 0, 0) : new Date(startDate),
+        end: isAllDay ? new Date(endDate).setHours(23, 59, 59, 999) : new Date(endDate),
+        allDay: isAllDay,
       };
 
-      calendarApi.addEvent(newEvent);
+      calendarApi?.addEvent(newEvent);
       handleCloseDialog();
     }
   };
@@ -96,7 +102,6 @@ const Calendar: React.FC = () => {
   return (
     <>
       <HeaderTitle title="Calendar" />
-
       <MyEvents />
 
       <div className="bg-white rounded-xl p-8">
@@ -148,7 +153,7 @@ const Calendar: React.FC = () => {
           }}
           eventContent={(args: EventContentArg) => {
             const { event } = args;
-
+          
             if (!event?.start || !event?.end) {
               return (
                 <div className="cursor-context-menu relative">
@@ -156,65 +161,33 @@ const Calendar: React.FC = () => {
                 </div>
               );
             }
-
-            const startDate = new Date(event.start).toLocaleString("de-DE", {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-            const endDate = new Date(event.end).toLocaleString("de-DE", {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-
-            if (event.allDay) {
-              return (
-                <div
-                  onContextMenu={(e) => handleRightClick(event, e)}
-                  className="cursor-context-menu relative"
-                >
-                  <div className="flex flex-col justify-start text-black">
-                    <div className="text-md font-medium">{event.title}</div>
-                  </div>
-                </div>
-              );
-            }
-
+          
+            const startDate = event.allDay
+              ? new Date(event.start).toLocaleDateString("de-DE")
+              : new Date(event.start).toLocaleString("de-DE", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+          
+            const endDate = event.allDay
+              ? new Date(event.end).toLocaleDateString("de-DE")
+              : new Date(event.end).toLocaleString("de-DE", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+          
+            // Beide Fälle behandeln, All-Day und normale Events
             return (
               <div
                 onContextMenu={(e) => handleRightClick(event, e)}
                 className="cursor-context-menu relative"
               >
                 <div className="flex flex-col justify-start text-black">
-                  <div className="text-md font-medium">{event.title}</div>
-                  <div className="text-sm">{`${startDate} - ${endDate}`}</div>
+                  <div className="text-md font-medium">{event.title}</div> {/* Sicherstellen, dass der Titel angezeigt wird */}
+                  {!event.allDay && (
+                    <div className="text-sm">{`${startDate} - ${endDate}`}</div>
+                  )}
                 </div>
-              </div>
-            );
-          }}
-          dayHeaderContent={(args) => {
-            const date = args.date;
-            const today = new Date();
-            const isToday =
-              date.getFullYear() === today.getFullYear() &&
-              date.getMonth() === today.getMonth() &&
-              date.getDate() === today.getDate();
-
-            const weekdayShort = new Intl.DateTimeFormat("en-US", {
-              weekday: "short",
-            }).format(date);
-
-            const day = new Intl.DateTimeFormat("de-DE", {
-              day: "numeric",
-            }).format(date);
-
-            return (
-              <div className="text-center day-header">
-                <div>{weekdayShort.toUpperCase()}</div>
-                {isToday ? (
-                  <div className="day-number">{day}</div>
-                ) : (
-                  <div>{day}</div>
-                )}
               </div>
             );
           }}
@@ -245,21 +218,107 @@ const Calendar: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Event Details</DialogTitle>
           </DialogHeader>
-          <form className="space-x-3" onSubmit={handleAddEvent}>
-            <input
-              type="text"
-              placeholder="Event Title"
-              value={newEventTitle}
-              onChange={(e) => setNewEventTitle(e.target.value)}
-              required
-              className="border border-gray-300 px-3 py-2 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-[#28AD5E]"
-            />
-            <button
-              className="bg-black text-white py-2 px-4 rounded cursor-pointer"
-              type="submit"
-            >
-              Add
-            </button>
+          <form className="space-y-4" onSubmit={handleAddEvent}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Event Title
+              </label>
+              <input
+                type="text"
+                placeholder="Event Title"
+                value={newEventTitle}
+                onChange={(e) => setNewEventTitle(e.target.value)}
+                required
+                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Start Date & Time
+              </label>
+              <div className="flex gap-4">
+                <input
+                  type="date"
+                  value={startDate.split("T")[0]} // Nur das Datum extrahieren
+                  onChange={(e) =>
+                    setStartDate(
+                      `${e.target.value}T${startDate.split("T")[1] || "00:00"}`
+                    )
+                  }
+                  required
+                  className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                />
+                {!isAllDay && (
+                  <input
+                    type="time"
+                    value={startDate.slice(11, 16)} // Nur die Uhrzeit extrahieren
+                    onChange={(e) =>
+                      setStartDate(`${startDate.split("T")[0]}T${e.target.value}`)
+                    }
+                    required
+                    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                  />
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                End Date & Time
+              </label>
+              <div className="flex gap-4">
+                <input
+                  type="date"
+                  value={endDate.split("T")[0]} // Nur das Datum extrahieren
+                  onChange={(e) =>
+                    setEndDate(
+                      `${e.target.value}T${endDate.split("T")[1] || "00:00"}`
+                    )
+                  }
+                  required
+                  className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                />
+                {!isAllDay && (
+                  <input
+                    type="time"
+                    value={endDate.slice(11, 16)} // Nur die Uhrzeit extrahieren
+                    onChange={(e) =>
+                      setEndDate(`${endDate.split("T")[0]}T${e.target.value}`)
+                    }
+                    required
+                    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                  />
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={isAllDay}
+                  onChange={() => setIsAllDay(!isAllDay)}
+                />
+                <span>All Day Event</span>
+              </label>
+            </div>
+
+            <div className="mt-6 flex gap-4">
+              <button
+                type="button"
+                onClick={handleCloseDialog}
+                className="w-full text-white bg-gray-500 py-2 px-4 rounded-md"
+              >
+                Close
+              </button>
+              <button
+                type="submit"
+                className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+              >
+                Add Event
+              </button>
+            </div>
           </form>
         </DialogContent>
       </Dialog>
