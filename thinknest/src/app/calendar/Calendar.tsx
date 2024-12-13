@@ -50,7 +50,7 @@ const Calendar: React.FC = () => {
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
-  
+
     // Konvertiere Zeit in lokales Format
     const localStart = new Date(selected.start).toLocaleString("sv-SE", {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -62,12 +62,11 @@ const Calendar: React.FC = () => {
           hour12: false,
         })
       : "";
-  
+
     setStartDate(localStart.replace(" ", "T"));
     setEndDate(localEnd.replace(" ", "T"));
     setIsDialogOpen(true);
   };
-  
 
   const handleRightClick = (event: EventApi | null, e: React.MouseEvent) => {
     e.preventDefault();
@@ -99,24 +98,27 @@ const Calendar: React.FC = () => {
 
   const handleAddEvent = (e: React.FormEvent) => {
     e.preventDefault();
+  
     if (newEventTitle && (isAllDay || (startDate && endDate))) {
       const calendarApi = selectedDate?.view.calendar;
       calendarApi?.unselect();
   
       const newEvent = {
-        id: `${startDate}-${newEventTitle}`,
-        title: newEventTitle,
-        start: new Date(startDate), // Keine UTC-Anpassung nötig
-        end: new Date(endDate),
+        id: `${startDate}-${newEventTitle}`, // Eindeutige ID
+        title: newEventTitle, // Event-Titel
+        start: new Date(startDate),
+        end: isAllDay ? undefined : new Date(endDate), // Verwende undefined statt null für All-Day-Events
         allDay: isAllDay,
-        location,
+        location, // Zusätzliche Eigenschaften können je nach deiner Implementierung ignoriert werden
         description,
       };
   
-      calendarApi?.addEvent(newEvent);
+      calendarApi?.addEvent(newEvent); // Event zum Kalender hinzufügen
       handleCloseDialog();
     }
   };
+  
+  
   
 
   return (
@@ -165,7 +167,7 @@ const Calendar: React.FC = () => {
           }}
           locale={{
             code: "de",
-            allDayText: ""
+            allDayText: "",
           }}
           timeZone="local"
           titleFormat={{
@@ -201,29 +203,15 @@ const Calendar: React.FC = () => {
           }}
           eventContent={(args: EventContentArg) => {
             const { event } = args;
-
-            if (!event?.start || !event?.end) {
+          
+            // Überprüfe, ob ein Titel vorhanden ist
+            if (!event?.title) {
               return (
                 <div className="cursor-context-menu relative">
                   No Event Details
                 </div>
               );
             }
-
-            const startDate = event.allDay
-              ? new Date(event.start).toLocaleDateString("de-DE")
-              : new Date(event.start).toLocaleString("de-DE", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                });
-
-            const endDate = event.allDay
-              ? new Date(event.end).toLocaleDateString("de-DE")
-              : new Date(event.end).toLocaleString("de-DE", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                });
-
             return (
               <div
                 onContextMenu={(e) => handleRightClick(event, e)}
@@ -231,9 +219,6 @@ const Calendar: React.FC = () => {
               >
                 <div className="flex flex-col justify-start text-black">
                   <div className="text-md font-medium">{event.title}</div>
-                  {!event.allDay && (
-                    <div className="text-sm">{`${startDate} - ${endDate}`}</div>
-                  )}
                 </div>
               </div>
             );
@@ -285,7 +270,7 @@ const Calendar: React.FC = () => {
               <div className="flex gap-4">
                 <input
                   type="date"
-                  value={startDate.split("T")[0]} 
+                  value={startDate.split("T")[0]}
                   onChange={(e) =>
                     setStartDate(
                       `${e.target.value}T${startDate.split("T")[1] || "00:00"}`
@@ -344,8 +329,8 @@ const Calendar: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={isAllDay}
                   onChange={() => setIsAllDay(!isAllDay)}
+                  checked={isAllDay}
                 />
                 <span className="text-sm">All Day</span>
               </div>
