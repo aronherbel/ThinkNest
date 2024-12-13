@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 type Event = {
@@ -13,6 +13,31 @@ const MyEvents = () => {
   const [isAddingEventCategory, setIsAddingEventCategory] = useState(false);
   const [eventCategoryName, setEventCategoryName] = useState("");
   const [eventColor, setEventColor] = useState("#28AD5E");
+
+  useEffect(() => {
+    try {
+      const savedEventCategories = localStorage.getItem("eventCategories");
+      if (savedEventCategories) {
+        const parsedCategories = JSON.parse(savedEventCategories);
+        if (Array.isArray(parsedCategories)) {
+          setEventsCategorys(parsedCategories);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading event categories:", error);
+    }
+  }, []);
+
+  // Save event categories to localStorage whenever they change
+  useEffect(() => {
+    try {
+      if (eventsCategorys.length > 0) {
+        localStorage.setItem("eventCategories", JSON.stringify(eventsCategorys));
+      }
+    } catch (error) {
+      console.error("Error saving event categories:", error);
+    }
+  }, [eventsCategorys]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -81,11 +106,7 @@ const MyEvents = () => {
               onClick={handleAddEventCategory}
             />
             <Image
-              src={
-                isDropdownOpen
-                  ? "/assets/icons/arrow_drop_down_icon.svg"
-                  : "/assets/icons/arrow_drop_up_icon.svg"
-              }
+              src={isDropdownOpen ? "/assets/icons/arrow_drop_down_icon.svg" : "/assets/icons/arrow_drop_up_icon.svg"}
               alt="dropdown_icon"
               width={30}
               height={30}
@@ -95,7 +116,6 @@ const MyEvents = () => {
           </div>
         </div>
 
-        {/* Add Event Form */}
         {isAddingEventCategory && (
           <div className="bg-gray-100 p-4 rounded-lg w-full space-y-4">
             <input
@@ -109,11 +129,7 @@ const MyEvents = () => {
               {colors.map((color) => (
                 <div
                   key={color}
-                  className={`w-5 h-5 rounded-full cursor-pointer border-2 transition-colors duration-300 ${
-                    eventColor === color
-                      ? "border-green-500"
-                      : "border-gray-300"
-                  }`}
+                  className={`w-5 h-5 rounded-full cursor-pointer border-2 transition-colors duration-300 ${eventColor === color ? "border-green-500" : "border-gray-300"}`}
                   style={{ backgroundColor: color }}
                   onClick={() => setEventColor(color)}
                 />
@@ -153,9 +169,7 @@ const MyEvents = () => {
                     <span
                       className="w-5 h-5 rounded-sm cursor-pointer flex-shrink-0 mr-3"
                       style={{
-                        backgroundColor: event.isHighlighted
-                          ? event.color
-                          : "transparent",
+                        backgroundColor: event.isHighlighted ? event.color : "transparent",
                         border: `2px solid ${event.color}`,
                       }}
                       onClick={() => toggleHighlight(index)}
