@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 type Event = {
@@ -10,19 +10,43 @@ type Event = {
 const MyEvents = () => {
   const [eventsCategorys, setEventsCategorys] = useState<Event[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isAddingEvent, setIsAddingEvent] = useState(false);
+  const [isAddingEventCategory, setIsAddingEventCategory] = useState(false);
   const [eventCategoryName, setEventCategoryName] = useState("");
   const [eventColor, setEventColor] = useState("#28AD5E");
+
+  useEffect(() => {
+    try {
+      const savedEventCategories = localStorage.getItem("eventCategories");
+      if (savedEventCategories) {
+        const parsedCategories = JSON.parse(savedEventCategories);
+        if (Array.isArray(parsedCategories)) {
+          setEventsCategorys(parsedCategories);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading event categories:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (eventsCategorys.length > 0) {
+        localStorage.setItem("eventCategories", JSON.stringify(eventsCategorys));
+      }
+    } catch (error) {
+      console.error("Error saving event categories:", error);
+    }
+  }, [eventsCategorys]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const handleAddEvent = () => {
-    setIsAddingEvent(true);
+  const handleAddEventCategory = () => {
+    setIsAddingEventCategory(true);
   };
 
-  const handleCreateEvent = () => {
+  const handleCreateEventCategory = () => {
     if (eventCategoryName.trim() === "") return;
     const newEvent: Event = {
       name: eventCategoryName,
@@ -32,7 +56,7 @@ const MyEvents = () => {
     setEventsCategorys((prev) => [...prev, newEvent]);
     setEventCategoryName("");
     setEventColor("#000000");
-    setIsAddingEvent(false);
+    setIsAddingEventCategory(false);
     setIsDropdownOpen(true);
   };
 
@@ -44,15 +68,24 @@ const MyEvents = () => {
     );
   };
 
-  const handleDeleteEvent = (index: number) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+  const handleDeleteEventCategory = (index: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this event category?"
+    );
     if (confirmDelete) {
-      setEventsCategorys((prev) => prev.filter((_, i) => i !== index));
+      setEventsCategorys((prev) => {
+        const updatedCategories = prev.filter((_, i) => i !== index);
+        // Update the LocalStorage direkt nach dem Zustand-Update
+        localStorage.setItem("eventCategories", JSON.stringify(updatedCategories));
+        return updatedCategories;
+      });
     }
   };
+  
+  
 
   const handleCloseDialog = () => {
-    setIsAddingEvent(false);
+    setIsAddingEventCategory(false);
   };
 
   const colors = [
@@ -76,14 +109,10 @@ const MyEvents = () => {
               width={30}
               height={30}
               className="hover:bg-gray-200 p-2 rounded-md cursor-pointer"
-              onClick={handleAddEvent}
+              onClick={handleAddEventCategory}
             />
             <Image
-              src={
-                isDropdownOpen
-                  ? "/assets/icons/arrow_drop_down_icon.svg"
-                  : "/assets/icons/arrow_drop_up_icon.svg"
-              }
+              src={isDropdownOpen ? "/assets/icons/arrow_drop_down_icon.svg" : "/assets/icons/arrow_drop_up_icon.svg"}
               alt="dropdown_icon"
               width={30}
               height={30}
@@ -93,8 +122,7 @@ const MyEvents = () => {
           </div>
         </div>
 
-        {/* Add Event Form */}
-        {isAddingEvent && (
+        {isAddingEventCategory && (
           <div className="bg-gray-100 p-4 rounded-lg w-full space-y-4">
             <input
               type="text"
@@ -107,16 +135,13 @@ const MyEvents = () => {
               {colors.map((color) => (
                 <div
                   key={color}
-                  className={`w-5 h-5 rounded-full cursor-pointer border-2 transition-colors duration-300 ${
-                    eventColor === color
-                      ? "border-green-500"
-                      : "border-gray-300"
-                  }`}
+                  className={`w-5 h-5 rounded-full cursor-pointer border-2 transition-colors duration-300 ${eventColor === color ? "border-green-500" : "border-gray-300"}`}
                   style={{ backgroundColor: color }}
                   onClick={() => setEventColor(color)}
                 />
               ))}
             </div>
+
             <div className="flex justify-between gap-2">
               <button
                 type="button"
@@ -128,7 +153,7 @@ const MyEvents = () => {
               <button
                 type="submit"
                 className="bg-black text-white text-xs px-4 py-2 rounded-md"
-                onClick={handleCreateEvent}
+                onClick={handleCreateEventCategory}
               >
                 Add
               </button>
@@ -150,9 +175,7 @@ const MyEvents = () => {
                     <span
                       className="w-5 h-5 rounded-sm cursor-pointer flex-shrink-0 mr-3"
                       style={{
-                        backgroundColor: event.isHighlighted
-                          ? event.color
-                          : "transparent",
+                        backgroundColor: event.isHighlighted ? event.color : "transparent",
                         border: `2px solid ${event.color}`,
                       }}
                       onClick={() => toggleHighlight(index)}
@@ -166,7 +189,7 @@ const MyEvents = () => {
                       width={20}
                       height={20}
                       className="opacity-0 group-hover:opacity-100 hover:bg-gray-400 rounded-md cursor-pointer transition-opacity duration-200"
-                      onClick={() => handleDeleteEvent(index)}
+                      onClick={() => handleDeleteEventCategory(index)}
                     />
                   </li>
                 ))}
