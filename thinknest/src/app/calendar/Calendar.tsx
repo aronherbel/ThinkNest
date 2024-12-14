@@ -15,6 +15,7 @@ import {
 import "./calendarstyle.scss";
 import HeaderTitle from "@/components/HeaderTitle";
 import MyEvents from "./components/MyEvents";
+import CategorySelect from "./components/CategorySelect";
 
 type EventCategory = {
   name: string;
@@ -38,7 +39,7 @@ const Calendar: React.FC = () => {
   const [endDate, setEndDate] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);    
+  const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   useEffect(() => {
@@ -133,6 +134,13 @@ const Calendar: React.FC = () => {
       const calendarApi = selectedDate?.view.calendar;
       calendarApi?.unselect();
 
+      const selectedCategoryObj = eventCategories.find(
+        (category) => category.name === selectedCategory
+      );
+      const eventColor = selectedCategoryObj
+        ? selectedCategoryObj.color
+        : "#28AD5E"; 
+
       const newEvent = {
         id: `${startDate}-${newEventTitle}`,
         title: newEventTitle,
@@ -142,12 +150,44 @@ const Calendar: React.FC = () => {
         location,
         description,
         category: selectedCategory,
+        extendedProps: { color: eventColor },
       };
 
       calendarApi?.addEvent(newEvent);
       handleCloseDialog();
     }
   };
+
+
+  useEffect(() => {
+    // Funktion, die prüft, ob ein Event zur aktuellen Zeit existiert
+    const checkCurrentEvent = () => {
+      const now = new Date();
+  
+      // Gehe alle aktuellen Events durch
+      currentEvents.forEach((event) => {
+        // Prüfe, ob event.start ein gültiger Wert ist
+        const eventStart = event.start ? new Date(event.start) : null;
+        const eventEnd = event.end ? new Date(event.end) : null;
+  
+        // Wenn das Startdatum des Events nicht null ist und das Event innerhalb des Zeitrahmens liegt
+        if (eventStart && eventEnd && now >= eventStart && now <= eventEnd) {
+          console.log(`Aktuelles Event: ${event.title}, Kategorie: ${event.extendedProps.color}`);
+        } else if (eventStart && !eventEnd && now >= eventStart) {
+          // Wenn kein Enddatum existiert und nur das Startdatum geprüft wird
+          console.log(`Aktuelles Event ohne Endzeit: ${event.title}, Kategorie: ${event.extendedProps.color}`);
+        }
+      });
+    };
+  
+    // Rufe die Funktion alle 5 Sekunden auf
+    const intervalId = setInterval(checkCurrentEvent, 5000);
+  
+    // Aufräumen: Stoppe die Intervall-Überprüfung, wenn der Komponent unmontiert wird
+    return () => clearInterval(intervalId);
+  }, [currentEvents]);
+  
+  
 
   return (
     <>
@@ -188,7 +228,7 @@ const Calendar: React.FC = () => {
           views={{
             timeGridWeek: {
               nowIndicator: true,
-            }
+            },
           }}
           locale={{
             code: "de",
@@ -228,6 +268,7 @@ const Calendar: React.FC = () => {
           }}
           eventContent={(args: EventContentArg) => {
             const { event } = args;
+            const eventColor = event.extendedProps.color;
 
             const startDate = event.start
               ? event.allDay
@@ -251,6 +292,9 @@ const Calendar: React.FC = () => {
               <div
                 onContextMenu={(e) => handleRightClick(event, e)}
                 className="cursor-context-menu relative"
+                style={{
+                  backgroundColor: eventColor,  
+                }}
               >
                 <div className="flex flex-col justify-start text-black">
                   <div className="text-md font-medium">{event.title}</div>
@@ -400,33 +444,15 @@ const Calendar: React.FC = () => {
             </div>
 
             <div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">
-    My Event's Categories
-  </label>
-  <select
-    id="category"
-    value={selectedCategory}
-    onChange={(e) => setSelectedCategory(e.target.value)}
-    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-    required
-  >
-    {/* Mapping through categories from the state */}
-    {eventCategories.length > 0 ? (
-      eventCategories.map((category, index) => (
-        <option
-          key={index}
-          value={category.name}
-          style={{ backgroundColor: category.color, color: '#fff' }}
-        >
-          {category.name}
-        </option>
-      ))
-    ) : (
-      <option value="">No categories available</option>
-    )}
-  </select>
-</div>
-
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                My Event's Categories
+              </label>
+              <CategorySelect
+                categories={eventCategories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
+            </div>
 
             <div className="flex justify-between gap-2">
               <button
