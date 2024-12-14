@@ -28,7 +28,6 @@ const MyEvents = () => {
     }
   }, []);
 
-  // Save event categories to localStorage whenever they change
   useEffect(() => {
     try {
       if (eventsCategorys.length > 0) {
@@ -71,12 +70,19 @@ const MyEvents = () => {
 
   const handleDeleteEventCategory = (index: number) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this event?"
+      "Are you sure you want to delete this event category?"
     );
     if (confirmDelete) {
-      setEventsCategorys((prev) => prev.filter((_, i) => i !== index));
+      setEventsCategorys((prev) => {
+        const updatedCategories = prev.filter((_, i) => i !== index);
+        // Update the LocalStorage direkt nach dem Zustand-Update
+        localStorage.setItem("eventCategories", JSON.stringify(updatedCategories));
+        return updatedCategories;
+      });
     }
   };
+  
+  
 
   const handleCloseDialog = () => {
     setIsAddingEventCategory(false);

@@ -16,6 +16,12 @@ import "./calendarstyle.scss";
 import HeaderTitle from "@/components/HeaderTitle";
 import MyEvents from "./components/MyEvents";
 
+type EventCategory = {
+  name: string;
+  color: string;
+  isHighlighted: boolean;
+};
+
 const Calendar: React.FC = () => {
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -32,6 +38,8 @@ const Calendar: React.FC = () => {
   const [endDate, setEndDate] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);    
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -48,10 +56,31 @@ const Calendar: React.FC = () => {
     }
   }, [currentEvents]);
 
+  useEffect(() => {
+    const loadEventCategories = () => {
+      const savedCategories = localStorage.getItem("eventCategories");
+      if (savedCategories) {
+        try {
+          const parsedCategories = JSON.parse(savedCategories);
+          if (Array.isArray(parsedCategories)) {
+            setEventCategories(parsedCategories);
+          }
+        } catch (error) {
+          console.error("Error parsing event categories:", error);
+        }
+      }
+    };
+
+    loadEventCategories();
+
+    const intervalId = setInterval(loadEventCategories, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
 
-    // Konvertiere Zeit in lokales Format
     const localStart = new Date(selected.start).toLocaleString("sv-SE", {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       hour12: false,
@@ -94,6 +123,7 @@ const Calendar: React.FC = () => {
     setIsAllDay(false);
     setLocation("");
     setDescription("");
+    setSelectedCategory("");
   };
 
   const handleAddEvent = (e: React.FormEvent) => {
@@ -104,16 +134,17 @@ const Calendar: React.FC = () => {
       calendarApi?.unselect();
 
       const newEvent = {
-        id: `${startDate}-${newEventTitle}`, // Eindeutige ID
-        title: newEventTitle, // Event-Titel
+        id: `${startDate}-${newEventTitle}`,
+        title: newEventTitle,
         start: new Date(startDate),
-        end: isAllDay ? undefined : new Date(endDate), // Verwende undefined statt null für All-Day-Events
+        end: isAllDay ? undefined : new Date(endDate),
         allDay: isAllDay,
-        location, // Zusätzliche Eigenschaften können je nach deiner Implementierung ignoriert werden
+        location,
         description,
+        category: selectedCategory,
       };
 
-      calendarApi?.addEvent(newEvent); // Event zum Kalender hinzufügen
+      calendarApi?.addEvent(newEvent);
       handleCloseDialog();
     }
   };
@@ -157,10 +188,7 @@ const Calendar: React.FC = () => {
           views={{
             timeGridWeek: {
               nowIndicator: true,
-            },
-            timeGridDay: {
-              nowIndicator: true,
-            },
+            }
           }}
           locale={{
             code: "de",
@@ -253,160 +281,171 @@ const Calendar: React.FC = () => {
         </div>
       )}
 
-<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Event Details</DialogTitle>
-    </DialogHeader>
-    <form className="space-y-4" onSubmit={handleAddEvent}>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Event Title
-        </label>
-        <input
-          type="text"
-          placeholder="Event Title"
-          value={newEventTitle}
-          onChange={(e) => setNewEventTitle(e.target.value)}
-          required
-          className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-        />
-      </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Event Details</DialogTitle>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={handleAddEvent}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Event Title
+              </label>
+              <input
+                type="text"
+                placeholder="Event Title"
+                value={newEventTitle}
+                onChange={(e) => setNewEventTitle(e.target.value)}
+                required
+                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+              />
+            </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Start Date & Time
-        </label>
-        <div className="flex gap-4">
-          <input
-            type="date"
-            value={startDate.split("T")[0]}
-            onChange={(e) =>
-              setStartDate(
-                `${e.target.value}T${startDate.split("T")[1] || "00:00"}`
-              )
-            }
-            required
-            className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-          />
-          {!isAllDay && (
-            <input
-              type="time"
-              value={startDate.slice(11, 16)}
-              onChange={(e) =>
-                setStartDate(
-                  `${startDate.split("T")[0]}T${e.target.value}`
-                )
-              }
-              required
-              className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-            />
-          )}
-        </div>
-      </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Start Date & Time
+              </label>
+              <div className="flex gap-4">
+                <input
+                  type="date"
+                  value={startDate.split("T")[0]}
+                  onChange={(e) =>
+                    setStartDate(
+                      `${e.target.value}T${startDate.split("T")[1] || "00:00"}`
+                    )
+                  }
+                  required
+                  className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                />
+                {!isAllDay && (
+                  <input
+                    type="time"
+                    value={startDate.slice(11, 16)}
+                    onChange={(e) =>
+                      setStartDate(
+                        `${startDate.split("T")[0]}T${e.target.value}`
+                      )
+                    }
+                    required
+                    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                  />
+                )}
+              </div>
+            </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          End Date & Time
-        </label>
-        <div className="flex gap-4">
-          <input
-            type="date"
-            value={endDate.split("T")[0]}
-            onChange={(e) =>
-              setEndDate(
-                `${e.target.value}T${endDate.split("T")[1] || "23:59"}`
-              )
-            }
-            required
-            className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-          />
-          {!isAllDay && (
-            <input
-              type="time"
-              value={endDate.slice(11, 16)}
-              onChange={(e) =>
-                setEndDate(`${endDate.split("T")[0]}T${e.target.value}`)
-              }
-              required
-              className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-            />
-          )}
-        </div>
-      </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                End Date & Time
+              </label>
+              <div className="flex gap-4">
+                <input
+                  type="date"
+                  value={endDate.split("T")[0]}
+                  onChange={(e) =>
+                    setEndDate(
+                      `${e.target.value}T${endDate.split("T")[1] || "23:59"}`
+                    )
+                  }
+                  required
+                  className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                />
+                {!isAllDay && (
+                  <input
+                    type="time"
+                    value={endDate.slice(11, 16)}
+                    onChange={(e) =>
+                      setEndDate(`${endDate.split("T")[0]}T${e.target.value}`)
+                    }
+                    required
+                    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                  />
+                )}
+              </div>
+            </div>
 
-      <div className="flex gap-4">
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            onChange={() => setIsAllDay(!isAllDay)}
-            checked={isAllDay}
-          />
-          <span className="text-sm">All Day</span>
-        </div>
-      </div>
+            <div className="flex gap-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  onChange={() => setIsAllDay(!isAllDay)}
+                  checked={isAllDay}
+                />
+                <span className="text-sm">All Day</span>
+              </div>
+            </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Location
-        </label>
-        <input
-          type="text"
-          placeholder="Event Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-        />
-      </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Location
+              </label>
+              <input
+                type="text"
+                placeholder="Event Location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+              />
+            </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Description
-        </label>
-        <textarea
-          placeholder="Event Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-        />
-      </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <textarea
+                placeholder="Event Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+              />
+            </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          My Event's
-        </label>
-        <select
-          className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
-          required
+            <div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    My Event's Categories
+  </label>
+  <select
+    id="category"
+    value={selectedCategory}
+    onChange={(e) => setSelectedCategory(e.target.value)}
+    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+    required
+  >
+    {/* Mapping through categories from the state */}
+    {eventCategories.length > 0 ? (
+      eventCategories.map((category, index) => (
+        <option
+          key={index}
+          value={category.name}
+          style={{ backgroundColor: category.color, color: '#fff' }}
         >
-          <option value="">Event Category</option>
-          <option value="work">Work</option>
-          <option value="personal">Personal</option>
-          <option value="birthday">Birthday</option>
-          <option value="meeting">Meeting</option>
-          <option value="holiday">Holiday</option>
-        </select>
-      </div>
+          {category.name}
+        </option>
+      ))
+    ) : (
+      <option value="">No categories available</option>
+    )}
+  </select>
+</div>
 
-      <div className="flex justify-between gap-2">
-        <button
-          type="button"
-          onClick={handleCloseDialog}
-          className="border border-gray-300 text-gray-600 px-6 py-2 rounded-lg"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="bg-black text-white px-6 py-2 rounded-lg"
-        >
-          Add
-        </button>
-      </div>
-    </form>
-  </DialogContent>
-</Dialog>
 
+            <div className="flex justify-between gap-2">
+              <button
+                type="button"
+                onClick={handleCloseDialog}
+                className="border border-gray-300 text-gray-600 px-6 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-black text-white px-6 py-2 rounded-lg"
+              >
+                Add
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
