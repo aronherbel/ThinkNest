@@ -17,17 +17,20 @@ import "./calendarstyle.scss";
 import HeaderTitle from "@/components/HeaderTitle";
 import MyEvents from "./components/MyEvents";
 
+// Exportierte Funktion zum Abrufen von Events aus localStorage
+export const getCalendarEvents = () => {
+  if (typeof window !== "undefined") {
+    const savedEvents = localStorage.getItem("events");
+    return savedEvents ? JSON.parse(savedEvents) : [];
+  }
+  return [];
+};
+
 const Calendar: React.FC = () => {
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newEventTitle, setNewEventTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
-  const [contextMenu, setContextMenu] = useState<{
-    visible: boolean;
-    x: number;
-    y: number;
-    event: EventApi | null;
-  }>({ visible: false, x: 0, y: 0, event: null });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,31 +52,6 @@ const Calendar: React.FC = () => {
     setIsDialogOpen(true);
   };
 
-  const handleRightClick = (event: EventApi | null, e: React.MouseEvent) => {
-    e.preventDefault();
-    if (event) {
-      setContextMenu({ visible: true, x: e.clientX, y: e.clientY, event });
-    } else {
-      setContextMenu({ visible: false, x: 0, y: 0, event: null });
-    }
-  };
-
-  const handleDeleteEvent = () => {
-    if (contextMenu?.event) {
-      try {
-        contextMenu.event.remove();
-        setContextMenu({ visible: false, x: 0, y: 0, event: null });
-      } catch (error) {
-        console.error("Fehler beim Löschen des Events", error);
-      }
-    }
-  };
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-    setNewEventTitle("");
-  };
-
   const handleAddEvent = (e: React.FormEvent) => {
     e.preventDefault();
     if (newEventTitle && selectedDate) {
@@ -89,16 +67,15 @@ const Calendar: React.FC = () => {
       };
 
       calendarApi.addEvent(newEvent);
-      handleCloseDialog();
+      setIsDialogOpen(false);
+      setNewEventTitle("");
     }
   };
 
   return (
     <>
       <HeaderTitle title="Calendar" />
-
       <MyEvents />
-
       <div className="bg-white rounded-xl p-8">
         <FullCalendar
           height={"85vh"}
@@ -109,12 +86,8 @@ const Calendar: React.FC = () => {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           initialView="timeGridWeek"
-          firstDay={1}
           editable={true}
           selectable={true}
-          scrollTime={new Date().toISOString().slice(11, 19)}
-          selectMirror={true}
-          dayMaxEvents={true}
           select={handleDateClick}
           eventsSet={(events) => setCurrentEvents(events)}
           initialEvents={
@@ -123,140 +96,28 @@ const Calendar: React.FC = () => {
               : []
           }
           nowIndicator={true}
-          slotDuration="00:30:00"
-          slotLabelInterval="01:00:00"
-          slotLabelFormat={{
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          }}
-          views={{
-            timeGridWeek: {
-              nowIndicator: true,
-            },
-            timeGridDay: {
-              nowIndicator: true,
-            },
-          }}
-          locale={{
-            code: "de",
-            allDayText: "",
-          }}
-          titleFormat={{
-            year: "numeric",
-            month: "long",
-          }}
-          eventContent={(args: EventContentArg) => {
-            const { event } = args;
-
-            if (!event?.start || !event?.end) {
-              return (
-                <div className="cursor-context-menu relative">
-                  No Event Details
-                </div>
-              );
-            }
-
-            const startDate = new Date(event.start).toLocaleString("de-DE", {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-            const endDate = new Date(event.end).toLocaleString("de-DE", {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-
-            if (event.allDay) {
-              return (
-                <div
-                  onContextMenu={(e) => handleRightClick(event, e)}
-                  className="cursor-context-menu relative"
-                >
-                  <div className="flex flex-col justify-start text-black">
-                    <div className="text-md font-medium">{event.title}</div>
-                  </div>
-                </div>
-              );
-            }
-
-            return (
-              <div
-                onContextMenu={(e) => handleRightClick(event, e)}
-                className="cursor-context-menu relative"
-              >
-                <div className="flex flex-col justify-start text-black">
-                  <div className="text-md font-medium">{event.title}</div>
-                  <div className="text-sm">{`${startDate} - ${endDate}`}</div>
-                </div>
-              </div>
-            );
-          }}
-          dayHeaderContent={(args) => {
-            const date = args.date;
-            const today = new Date();
-            const isToday =
-              date.getFullYear() === today.getFullYear() &&
-              date.getMonth() === today.getMonth() &&
-              date.getDate() === today.getDate();
-
-            const weekdayShort = new Intl.DateTimeFormat("en-US", {
-              weekday: "short",
-            }).format(date);
-
-            const day = new Intl.DateTimeFormat("de-DE", {
-              day: "numeric",
-            }).format(date);
-
-            return (
-              <div className="text-center day-header">
-                <div>{weekdayShort.toUpperCase()}</div>
-                {isToday ? (
-                  <div className="day-number">{day}</div>
-                ) : (
-                  <div>{day}</div>
-                )}
-              </div>
-            );
-          }}
+          locale={{ code: "de" }}
         />
       </div>
 
-      {/* Context Menu for deleting events */}
-      {contextMenu.visible && (
-        <div
-          className="absolute bg-white border border-gray-300 rounded-md shadow-md z-50 p-2"
-          style={{
-            top: contextMenu.y,
-            left: contextMenu.x,
-          }}
-        >
-          <button
-            onClick={handleDeleteEvent}
-            className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 cursor-pointer"
-          >
-            Delete Event
-          </button>
-        </div>
-      )}
-
-      {/* Dialog for adding new events */}
+      {/* Dialog zum Hinzufügen neuer Events */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Event Details</DialogTitle>
           </DialogHeader>
-          <form className="space-x-3" onSubmit={handleAddEvent}>
+          <form onSubmit={handleAddEvent}>
             <input
               type="text"
               placeholder="Event Title"
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)}
               required
-              className="border border-gray-300 px-3 py-2 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-[#28AD5E]"
+              className="border border-gray-300 px-3 py-2 rounded-md"
             />
             <button
-              className="bg-black text-white py-2 px-4 rounded cursor-pointer"
               type="submit"
+              className="bg-black text-white py-2 px-4 rounded"
             >
               Add
             </button>
