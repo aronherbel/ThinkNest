@@ -59,7 +59,7 @@ const Calendar: React.FC = () => {
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
-  
+
     const localStart = new Date(selected.start).toLocaleString("sv-SE", {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       hour12: false,
@@ -70,10 +70,10 @@ const Calendar: React.FC = () => {
           hour12: false,
         })
       : "";
-  
+
     setStartDate(localStart.replace(" ", "T"));
     setEndDate(localEnd.replace(" ", "T"));
-  
+
     const loadEventCategories = () => {
       const savedCategories = localStorage.getItem("eventCategories");
       if (savedCategories) {
@@ -87,58 +87,9 @@ const Calendar: React.FC = () => {
         }
       }
     };
-  
+
     loadEventCategories();
     setIsDialogOpen(true);
-  };
-  
-
-  const handleRightClick = (event: EventApi | null, e: React.MouseEvent) => {
-    e.preventDefault();
-    if (event) {
-      setContextMenu({ visible: true, x: e.clientX, y: e.clientY, event });
-    } else {
-      setContextMenu({ visible: false, x: 0, y: 0, event: null });
-    }
-  };
-
-  const handleDeleteEvent = () => {
-    if (contextMenu?.event) {
-      try {
-        contextMenu.event.remove();
-        setContextMenu({ visible: false, x: 0, y: 0, event: null });
-      } catch (error) {
-        console.error("Fehler beim Löschen des Events", error);
-      }
-    }
-  };
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-    setNewEventTitle("");
-    setIsAllDay(false);
-    setLocation("");
-    setDescription("");
-    setSelectedCategory("");
-  };
-
-  const handleEventsSet = (events: EventApi[]) => {
-    setCurrentEvents(events);
-    if (typeof window !== "undefined") {
-      localStorage.setItem(
-        "events",
-        JSON.stringify(
-          events.map((event) => ({
-            id: event.id,
-            title: event.title,
-            start: event.startStr,
-            end: event.endStr,
-            allDay: event.allDay,
-            extendedProps: event.extendedProps,
-          }))
-        )
-      );
-    }
   };
 
   const handleAddEvent = (e: React.FormEvent) => {
@@ -171,6 +122,85 @@ const Calendar: React.FC = () => {
       handleCloseDialog();
     }
   };
+
+  const handleEventsSet = (events: EventApi[]) => {
+    setCurrentEvents(events);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "events",
+        JSON.stringify(
+          events.map((event) => ({
+            id: event.id,
+            title: event.title,
+            start: event.startStr,
+            end: event.endStr,
+            allDay: event.allDay,
+            extendedProps: event.extendedProps,
+          }))
+        )
+      );
+    }
+  };
+
+  const handleRightClick = (event: EventApi | null, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (event) {
+      setContextMenu({ visible: true, x: e.clientX, y: e.clientY, event });
+    } else {
+      setContextMenu({ visible: false, x: 0, y: 0, event: null });
+    }
+  };
+
+  const handleDeleteEvent = () => {
+    if (contextMenu?.event) {
+      try {
+        contextMenu.event.remove();
+        setContextMenu({ visible: false, x: 0, y: 0, event: null });
+      } catch (error) {
+        console.error("Fehler beim Löschen des Events", error);
+      }
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setNewEventTitle("");
+    setIsAllDay(false);
+    setLocation("");
+    setDescription("");
+    setSelectedCategory("");
+  };
+
+
+  useEffect(() => {
+    // Funktion, die prüft, ob ein Event zur aktuellen Zeit existiert
+    const checkCurrentEvent = () => {
+      const now = new Date();
+  
+      // Gehe alle aktuellen Events durch
+      currentEvents.forEach((event) => {
+        // Prüfe, ob event.start ein gültiger Wert ist
+        const eventStart = event.start ? new Date(event.start) : null;
+        const eventEnd = event.end ? new Date(event.end) : null;
+  
+        // Wenn das Startdatum des Events nicht null ist und das Event innerhalb des Zeitrahmens liegt
+        if (eventStart && eventEnd && now >= eventStart && now <= eventEnd) {
+          console.log(`Aktuelles Event: ${event.title}, Kategorie: ${event.extendedProps.color}`);
+        } else if (eventStart && !eventEnd && now >= eventStart) {
+          // Wenn kein Enddatum existiert und nur das Startdatum geprüft wird
+          console.log(`Aktuelles Event ohne Endzeit: ${event.title}, Kategorie: ${event.extendedProps.color}`);
+        }
+      });
+    };
+  
+    // Rufe die Funktion alle 5 Sekunden auf
+    const intervalId = setInterval(checkCurrentEvent, 1000);
+  
+    // Aufräumen: Stoppe die Intervall-Überprüfung, wenn der Komponent unmontiert wird
+    return () => clearInterval(intervalId);
+  }, [currentEvents]);
+  
+  
 
   return (
     <>
