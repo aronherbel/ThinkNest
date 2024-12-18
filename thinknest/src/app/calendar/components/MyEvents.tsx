@@ -82,7 +82,6 @@ const MyEvents = () => {
     }
   };
   
-  
 
   const handleCloseDialog = () => {
     setIsAddingEventCategory(false);
