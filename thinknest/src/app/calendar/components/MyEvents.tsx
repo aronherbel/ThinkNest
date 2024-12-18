@@ -9,7 +9,7 @@ type Event = {
 
 const MyEvents = () => {
   const [eventsCategorys, setEventsCategorys] = useState<Event[]>([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [isAddingEventCategory, setIsAddingEventCategory] = useState(false);
   const [eventCategoryName, setEventCategoryName] = useState("");
   const [eventColor, setEventColor] = useState("#28AD5E");
