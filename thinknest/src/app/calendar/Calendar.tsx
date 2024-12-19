@@ -171,37 +171,6 @@ const Calendar: React.FC = () => {
     setSelectedCategory("");
   };
 
-
-  useEffect(() => {
-    // Funktion, die prüft, ob ein Event zur aktuellen Zeit existiert
-    const checkCurrentEvent = () => {
-      const now = new Date();
-  
-      // Gehe alle aktuellen Events durch
-      currentEvents.forEach((event) => {
-        // Prüfe, ob event.start ein gültiger Wert ist
-        const eventStart = event.start ? new Date(event.start) : null;
-        const eventEnd = event.end ? new Date(event.end) : null;
-  
-        // Wenn das Startdatum des Events nicht null ist und das Event innerhalb des Zeitrahmens liegt
-        if (eventStart && eventEnd && now >= eventStart && now <= eventEnd) {
-          console.log(`Aktuelles Event: ${event.title}, Kategorie: ${event.extendedProps.color}`);
-        } else if (eventStart && !eventEnd && now >= eventStart) {
-          // Wenn kein Enddatum existiert und nur das Startdatum geprüft wird
-          console.log(`Aktuelles Event ohne Endzeit: ${event.title}, Kategorie: ${event.extendedProps.color}`);
-        }
-      });
-    };
-  
-    // Rufe die Funktion alle 5 Sekunden auf
-    const intervalId = setInterval(checkCurrentEvent, 1000);
-  
-    // Aufräumen: Stoppe die Intervall-Überprüfung, wenn der Komponent unmontiert wird
-    return () => clearInterval(intervalId);
-  }, [currentEvents]);
-  
-  
-
   return (
     <>
       <HeaderTitle title="Calendar" />
@@ -279,8 +248,39 @@ const Calendar: React.FC = () => {
             );
           }}
           eventContent={(args: EventContentArg) => {
-            const { event } = args;
+            const { event, view } = args;
             const eventColor = event.extendedProps.color;
+
+            const now = new Date();
+            const eventStart = event.start ? new Date(event.start) : null;
+            const eventEnd = event.end ? new Date(event.end) : null;
+
+            const isCurrentEvent =
+              eventStart &&
+              ((!eventEnd && now >= eventStart) ||
+                (eventEnd && now >= eventStart && now <= eventEnd));
+
+            // const activeCategory = isCurrentEvent
+            //   ? event.extendedProps.category
+            //   : null;
+
+            const allEvents = view.calendar.getEvents();
+
+            const isAnyActiveCategoryEvent = allEvents.some((ev) => {
+              const evStart = ev.start ? new Date(ev.start) : null;
+              const evEnd = ev.end ? new Date(ev.end) : null;
+              const isEventActive =
+                evStart &&
+                ((!evEnd && now >= evStart) ||
+                  (evEnd && now >= evStart && now <= evEnd));
+              return (
+                isEventActive &&
+                ev.extendedProps.category === event.extendedProps.category
+              );
+            });
+
+            const opacity =
+              isCurrentEvent || isAnyActiveCategoryEvent ? 1 : 0.5;
 
             const startDate = event.start
               ? event.allDay
@@ -306,6 +306,7 @@ const Calendar: React.FC = () => {
                 className="cursor-context-menu relative"
                 style={{
                   backgroundColor: eventColor,
+                  opacity,
                 }}
               >
                 <div className="flex flex-col justify-start text-black">
