@@ -32,8 +32,8 @@ const NavBar = () => {
                   isActive ? "bg-black text-white" : "hover:bg-[#DAD9D9]"
                 }`}
               >
-                <Image src={iconPath} alt={label} width={14} height={14} />
-                <Link href={href} className="flex-1 text-left">
+                <Link href={href} className="flex justify-between align-middle">
+                  <Image src={iconPath} alt={label} width={14} height={14} className="mr-3" />
                   {label}
                 </Link>
               </div>
