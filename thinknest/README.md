@@ -33,7 +33,7 @@ To get started with ThinkNest, follow these steps:
    ```
 4. **Run the app:**
    ```sh
-   npm start
+   npm run dev
    ```
 
 ## 👥 Contributors
@@ -50,4 +50,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📬 Contact
 
 For any inquiries or feedback, please feel free to contact us at:
-- **Email:** your-email@example.com
+- **Email:** ajnurxhaki@gmail.com
