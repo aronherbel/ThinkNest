@@ -1,6 +1,6 @@
 # 🧠 ThinkNest
 
-ThinkNest is a digital learning coach app designed to help students manage their daily information overload and achieve their learning goals effectively. Developed by Abdullazit Hassen Abdella and Aron Herbel, this app aims to serve as a 'Second Brain' for students, providing tools for better organization, focus, and productivity.
+ThinkNest is a digital learning coach app designed to help students manage their daily information overload and achieve their learning goals effectively. Developed by Ajnur Ademi, Abdullazst Hassen Abdella and Aron Herbel, this app aims to serve as a 'Second Brain' for students, providing tools for better organization, focus, and productivity.
 
 ## ✨ Features
 
@@ -38,6 +38,7 @@ To get started with ThinkNest, follow these steps:
 
 ## 👥 Contributors
 
+- [**Ajnur Ademi**](https://github.com/ajnurademi)
 - [**Aron Herbel**](https://github.com/aronherbel)
 - [**Abdullazit Hassen Abdella**](https://github.com/Abdullaziz213)
 
