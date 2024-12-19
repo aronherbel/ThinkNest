@@ -250,18 +250,22 @@ const Calendar: React.FC = () => {
           eventContent={(args: EventContentArg) => {
             const { event, view } = args;
             const eventColor = event.extendedProps.color;
-          
+
             const now = new Date();
             const eventStart = event.start ? new Date(event.start) : null;
             const eventEnd = event.end ? new Date(event.end) : null;
-          
+
             const isCurrentEvent =
               eventStart &&
               ((!eventEnd && now >= eventStart) ||
                 (eventEnd && now >= eventStart && now <= eventEnd));
-          
+
+            // const activeCategory = isCurrentEvent
+            //   ? event.extendedProps.category
+            //   : null;
+
             const allEvents = view.calendar.getEvents();
-          
+
             const isAnyActiveCategoryEvent = allEvents.some((ev) => {
               const evStart = ev.start ? new Date(ev.start) : null;
               const evEnd = ev.end ? new Date(ev.end) : null;
@@ -274,10 +278,10 @@ const Calendar: React.FC = () => {
                 ev.extendedProps.category === event.extendedProps.category
               );
             });
-          
+
             const opacity =
               isCurrentEvent || isAnyActiveCategoryEvent ? 1 : 0.5;
-          
+
             const startDate = event.start
               ? event.allDay
                 ? new Date(event.start).toLocaleDateString("de-DE")
@@ -286,7 +290,7 @@ const Calendar: React.FC = () => {
                     minute: "2-digit",
                   })
               : "";
-          
+
             const endDate = event.end
               ? event.allDay
                 ? new Date(event.end).toLocaleDateString("de-DE")
@@ -295,16 +299,7 @@ const Calendar: React.FC = () => {
                     minute: "2-digit",
                   })
               : "";
-          
-            const eventCategory = event.extendedProps.category;
-            const eventCategories = JSON.parse(localStorage.getItem("eventCategories") || "[]");
-          
-            const category = eventCategories.find((category: { name: string; isHighlighted: boolean }) => category.name === eventCategory);
-          
-            if (category && !category.isHighlighted) {
-              return null;
-            }
-          
+
             return (
               <div
                 onContextMenu={(e) => handleRightClick(event, e)}
