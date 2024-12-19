@@ -97,7 +97,7 @@ const ToDo = () => {
             className="p-2 border border-gray-300 rounded-lg"
           >
             <option value="" disabled>
-              Select Event
+              Select Category
             </option>
             {eventCategories.map((category, index) => (
               <option key={index} value={category.name}>
