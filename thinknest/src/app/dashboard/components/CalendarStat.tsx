@@ -25,11 +25,10 @@ const CalendarStat = () => {
 
     const todayEvents = storedEvents.filter((event: Event) => {
       const eventStart = new Date(event.start);
-      const eventDate = new Date(currentTime.toDateString());
-      eventStart.setHours(0, 0, 0, 0);
+      const eventEnd = new Date(event.end);
       return (
         eventStart.toDateString() === currentTime.toDateString() &&
-        new Date(event.start) > currentTime
+        (new Date(event.start) <= currentTime && new Date(event.end) >= currentTime || new Date(event.start) > currentTime)
       );
     });
 
@@ -58,7 +57,7 @@ const CalendarStat = () => {
         <div className="pl-5 pt-5">
           <div className="space-y-4 mt-2">
             {events.length === 0 ? (
-              <p className="text-gray-500 text-sm">No upcoming events today</p>
+              <p className="text-gray-500 text-sm">No upcoming or ongoing events today</p>
             ) : (
               events.slice(0, 4).map((event) => (
                 <div key={event.id} className="flex items-start space-x-4">
@@ -81,15 +80,17 @@ const CalendarStat = () => {
                 </div>
               ))
             )}
-            <div className="flex justify-end">
-              <Link href="/calendar">
-                <button className="py-3 px-4 bg-black text-white text-xs font-medium rounded-lg">
-                  View All
-                </button>
-              </Link>
-            </div>
           </div>
         </div>
+      </div>
+
+      {/* View All Button */}
+      <div className="flex justify-end pr-8 pb-8">
+        <Link href="/calendar">
+          <button className="py-2 px-6 bg-black text-white text-xs font-medium rounded-lg">
+            View All
+          </button>
+        </Link>
       </div>
     </div>
   );
