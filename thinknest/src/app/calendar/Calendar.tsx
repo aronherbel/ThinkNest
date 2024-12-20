@@ -175,7 +175,6 @@ const Calendar: React.FC = () => {
     <>
       <HeaderTitle title="Calendar" />
       <MyEvents />
-
       <div className="bg-white rounded-xl p-8">
         <FullCalendar
           height={"85vh"}
@@ -186,7 +185,6 @@ const Calendar: React.FC = () => {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           initialView="timeGridWeek"
-          firstDay={1}
           editable={true}
           selectable={true}
           selectMirror={true}
