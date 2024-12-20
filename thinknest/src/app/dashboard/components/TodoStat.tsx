@@ -23,7 +23,6 @@ const TodoStat = () => {
     setTodos(savedTodos);
   }, []);
 
-  // Toggle für Kategorien
   const toggleCategory = (category: string) => {
     setCollapsedCategories((prev) =>
       prev.includes(category)
@@ -32,7 +31,6 @@ const TodoStat = () => {
     );
   };
 
-  // Gruppiere Todos nach Kategorien
   const groupedTodos = todos.reduce((acc, todo) => {
     if (!acc[todo.event.name]) {
       acc[todo.event.name] = [];
@@ -42,7 +40,7 @@ const TodoStat = () => {
   }, {} as Record<string, Todo[]>);
 
   return (
-    <div className="bg-white rounded-xl min-w-[35rem] relative">
+    <div className="bg-white rounded-xl min-w-[35rem] relative flex flex-col justify-between">
       <div className="px-8 py-8">
         <div className="flex justify-between text-semibold mb-4 text-lg">
           <p>To Do</p>
@@ -59,9 +57,9 @@ const TodoStat = () => {
         {/* Kategorien und Aufgaben */}
         <div className="space-y-6">
           {Object.keys(groupedTodos).map((category) => (
-            <div key={category} className="border-b-[0.5px] border-[#F1F1F1] pb-4">
+            <div key={category} className="pb-4">
               <div
-                className="flex justify-between items-center cursor-pointer p-3 rounded-lg text-white"
+                className="flex justify-between items-center cursor-pointer p-3 rounded-lg text-black"
                 style={{ backgroundColor: groupedTodos[category][0].event.color }}
                 onClick={() => toggleCategory(category)}
               >
@@ -84,8 +82,8 @@ const TodoStat = () => {
                       key={index}
                       className="flex items-center justify-between bg-gray-50 p-2 rounded-md"
                     >
-                      <p className="text-sm font-medium">{todo.task}</p>
-                      <p className="text-gray-500 text-xs">{todo.date}</p>
+                      <p className="text-sm font-medium text-black">{todo.task}</p>
+                      <p className="text-black text-xs">{todo.date}</p>
                     </div>
                   ))}
                 </div>
@@ -96,9 +94,9 @@ const TodoStat = () => {
       </div>
 
       {/* View All Button */}
-      <div className="flex justify-end pr-8 pb-8">
+      <div className="flex justify-end items-end pr-8 pb-8">
         <Link href="/todo">
-          <button className="py-2 px-6 bg-black text-white text-xs font-medium rounded-lg">
+          <button className="py-3 px-4 bg-black text-white text-xs font-medium rounded-lg">
             View All
           </button>
         </Link>

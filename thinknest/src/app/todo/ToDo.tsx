@@ -79,9 +79,9 @@ const ToDo = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
+    <div className="min-h-screen">
       <HeaderTitle title="To Do" />
-      <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+      <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">To-Do List</h2>
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <input
@@ -113,7 +113,7 @@ const ToDo = () => {
           />
           <button
             onClick={addTodo}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            className="bg-black text-white px-4 py-2 rounded-lg"
             disabled={!inputValue || !selectedEvent || !selectedDate}
           >
             Add
