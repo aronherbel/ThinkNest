@@ -458,11 +458,15 @@ const Calendar: React.FC = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 My Event's Categories
               </label>
-              <CategorySelect
-                categories={eventCategories}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-              />
+              {eventCategories.length > 0 ? (
+                <CategorySelect
+                  categories={eventCategories}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                />
+              ) : (
+                <p className="text-gray-500 text-sm pl-4">No Event Category</p>
+              )}
             </div>
 
             <div className="flex justify-between gap-2">
