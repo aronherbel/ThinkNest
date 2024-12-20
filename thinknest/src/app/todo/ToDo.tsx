@@ -2,6 +2,7 @@
 
 import HeaderTitle from "@/components/HeaderTitle";
 import { useState, useEffect } from "react";
+import MyTodos from "./components/MyTodos";
 
 interface EventCategory {
   name: string;
@@ -25,19 +26,16 @@ const ToDo = () => {
   const [selectedEvent, setSelectedEvent] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
 
-  // Lade Event-Kategorien aus localStorage
   useEffect(() => {
     const categories = JSON.parse(localStorage.getItem("eventCategories") || "[]");
     setEventCategories(categories);
   }, []);
 
-  // Lade To-Dos aus localStorage
   useEffect(() => {
     const savedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
     setTodos(savedTodos);
   }, []);
 
-  // To-Do hinzufügen
   const addTodo = () => {
     if (inputValue && selectedEvent && selectedDate) {
       const selectedCategory = eventCategories.find(
@@ -81,8 +79,11 @@ const ToDo = () => {
   return (
     <div className="min-h-screen">
       <HeaderTitle title="To Do" />
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">To-Do List</h2>
+
+      <MyTodos />
+
+      <div className="bg-white p-6 rounded-lg">
+        <h2 className="text-xl font-bold mb-4">Add a To Do</h2>
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <input
             type="text"
