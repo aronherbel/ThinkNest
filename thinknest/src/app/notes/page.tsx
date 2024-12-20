@@ -14,7 +14,7 @@ interface PostItData {
 
 export default function Home() {
   const [postIts, setPostIts] = useState<PostItData[]>([]);
-  const [topics, setTopics] = useState<string[]>(['General', 'Work', 'Personal']);
+  const [topics, setTopics] = useState<string[]>(['Schule', 'Arbeit', 'Persoenlich']);
 
   // Lade gespeicherte Notizen und Themen aus localStorage
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function Home() {
   }, [topics]);
 
   const addPostIt = () => {
-    const newPostIt = { id: Date.now(), color: 'yellow', topic: 'General', note: '' };
+    const newPostIt = { id: Date.now(), color: 'yellow', topic: 'Schule', note: '' };
     const updatedPostIts = [...postIts, newPostIt];
     setPostIts(updatedPostIts);
   };
@@ -77,7 +77,7 @@ export default function Home() {
       {/* Post-it Container */}
       <div className="flex-1 bg-blue-50 p-4">
         <div
-          className="flex flex-nowrap gap-4"
+          className="flex flex-wrap gap-3"
           style={{
             justifyContent: 'flex-start', // Post-its linksbündig
           }}

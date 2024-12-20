@@ -32,21 +32,21 @@ const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopi
       className={`flex flex-col p-4 shadow-md rounded-md text-gray-800`}
       style={{
         backgroundColor: data.color,
-        width: '300px',
-        height: '300px',
+        width: '250px',
+        height: '250px',
       }}
       onClick={() => !isEditing && setIsEditing(true)}
     >
       {isEditing ? (
         <div className="flex flex-col h-full">
           <textarea
-            className="flex-1 p-2 mb-2 border rounded resize-none"
+            className="flex-1 p-3 mb-2 border rounded resize-none"
             value={data.note}
             onChange={(e) => onUpdate({ note: e.target.value })}
             placeholder="Notiz schreiben..."
           />
           <select
-            className="p-2 mb-2 border rounded"
+            className="p-0.5 mb-2 border rounded"
             value={data.topic}
             onChange={(e) => onUpdate({ topic: e.target.value })}
           >
@@ -59,20 +59,20 @@ const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopi
           <div className="flex items-center space-x-2 mb-2">
             <input
               type="text"
-              className="flex-1 p-2 border rounded"
+              className="flex-1 p-0.5 border rounded"
               value={newTopic}
               onChange={(e) => setNewTopic(e.target.value)}
               placeholder="Neues Thema hinzufügen"
             />
             <button
-              className="px-4 py-2 text-white bg-blue-500 rounded"
+              className="px-2 py-1 text-white bg-blue-500 rounded"
               onClick={handleAddTopic}
             >
               Hinzufügen
             </button>
           </div>
           <select
-            className="p-2 mb-2 border rounded"
+            className="p-0.3 mb-2 border rounded"
             value={data.color}
             onChange={(e) => onUpdate({ color: e.target.value })}
           >
@@ -83,7 +83,7 @@ const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopi
             ))}
           </select>
           <button
-            className="px-4 py-2 text-white bg-red-500 rounded"
+            className="px-4 py-0.5 text-white bg-red-500 rounded"
             onClick={(e) => {
               e.stopPropagation();
               if (confirm('Möchtest du dieses Post-it löschen?')) {
@@ -94,7 +94,7 @@ const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopi
             Löschen
           </button>
           <button
-            className="mt-2 px-4 py-2 text-white bg-gray-700 rounded"
+            className="mt-2 px-4 py-0.5 text-white bg-gray-700 rounded"
             onClick={(e) => {
               e.stopPropagation();
               setIsEditing(false);
