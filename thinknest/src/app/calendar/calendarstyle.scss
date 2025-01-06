@@ -35,11 +35,10 @@
   width: 100% !important;
   height: 100% !important;
   display: flex;
-  background-color: #4285f4;
-  color: white;
-  border-radius: 4px;
-  padding: 0 4px;
-  box-sizing: border-box;
+  border-radius: 2.5%;
+  padding: 0.2rem;
+  
+  
 }
 
 .fc-timegrid-slot {
@@ -64,4 +63,10 @@
 
 .fc-button{
   background-color: black !important;
+}
+
+.fc-event {
+  background-color: unset !important;
+  border: none !important;
+  color: unset !important;
 }

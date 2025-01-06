@@ -57,28 +57,6 @@ const Calendar: React.FC = () => {
     }
   }, [currentEvents]);
 
-  useEffect(() => {
-    const loadEventCategories = () => {
-      const savedCategories = localStorage.getItem("eventCategories");
-      if (savedCategories) {
-        try {
-          const parsedCategories = JSON.parse(savedCategories);
-          if (Array.isArray(parsedCategories)) {
-            setEventCategories(parsedCategories);
-          }
-        } catch (error) {
-          console.error("Error parsing event categories:", error);
-        }
-      }
-    };
-
-    loadEventCategories();
-
-    const intervalId = setInterval(loadEventCategories, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
 
@@ -95,7 +73,73 @@ const Calendar: React.FC = () => {
 
     setStartDate(localStart.replace(" ", "T"));
     setEndDate(localEnd.replace(" ", "T"));
+
+    const loadEventCategories = () => {
+      const savedCategories = localStorage.getItem("eventCategories");
+      if (savedCategories) {
+        try {
+          const parsedCategories = JSON.parse(savedCategories);
+          if (Array.isArray(parsedCategories)) {
+            setEventCategories(parsedCategories);
+          }
+        } catch (error) {
+          console.error("Error parsing event categories:", error);
+        }
+      }
+    };
+
+    loadEventCategories();
     setIsDialogOpen(true);
+  };
+
+  const handleAddEvent = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (newEventTitle && (isAllDay || (startDate && endDate))) {
+      const calendarApi = selectedDate?.view.calendar;
+      calendarApi?.unselect();
+
+      const selectedCategoryObj = eventCategories.find(
+        (category) => category.name === selectedCategory
+      );
+      const eventColor = selectedCategoryObj
+        ? selectedCategoryObj.color
+        : "#28AD5E";
+
+      const newEvent = {
+        id: `${startDate}-${newEventTitle}`,
+        title: newEventTitle,
+        start: new Date(startDate),
+        end: isAllDay ? undefined : new Date(endDate),
+        allDay: isAllDay,
+        location,
+        description,
+        category: selectedCategory,
+        extendedProps: { color: eventColor },
+      };
+
+      calendarApi?.addEvent(newEvent);
+      handleCloseDialog();
+    }
+  };
+
+  const handleEventsSet = (events: EventApi[]) => {
+    setCurrentEvents(events);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "events",
+        JSON.stringify(
+          events.map((event) => ({
+            id: event.id,
+            title: event.title,
+            start: event.startStr,
+            end: event.endStr,
+            allDay: event.allDay,
+            extendedProps: event.extendedProps,
+          }))
+        )
+      );
+    }
   };
 
   const handleRightClick = (event: EventApi | null, e: React.MouseEvent) => {
@@ -127,73 +171,10 @@ const Calendar: React.FC = () => {
     setSelectedCategory("");
   };
 
-  const handleAddEvent = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (newEventTitle && (isAllDay || (startDate && endDate))) {
-      const calendarApi = selectedDate?.view.calendar;
-      calendarApi?.unselect();
-
-      const selectedCategoryObj = eventCategories.find(
-        (category) => category.name === selectedCategory
-      );
-      const eventColor = selectedCategoryObj
-        ? selectedCategoryObj.color
-        : "#28AD5E"; 
-
-      const newEvent = {
-        id: `${startDate}-${newEventTitle}`,
-        title: newEventTitle,
-        start: new Date(startDate),
-        end: isAllDay ? undefined : new Date(endDate),
-        allDay: isAllDay,
-        location,
-        description,
-        category: selectedCategory,
-        extendedProps: { color: eventColor },
-      };
-
-      calendarApi?.addEvent(newEvent);
-      handleCloseDialog();
-    }
-  };
-
-
-  useEffect(() => {
-    // Funktion, die prüft, ob ein Event zur aktuellen Zeit existiert
-    const checkCurrentEvent = () => {
-      const now = new Date();
-  
-      // Gehe alle aktuellen Events durch
-      currentEvents.forEach((event) => {
-        // Prüfe, ob event.start ein gültiger Wert ist
-        const eventStart = event.start ? new Date(event.start) : null;
-        const eventEnd = event.end ? new Date(event.end) : null;
-  
-        // Wenn das Startdatum des Events nicht null ist und das Event innerhalb des Zeitrahmens liegt
-        if (eventStart && eventEnd && now >= eventStart && now <= eventEnd) {
-          console.log(`Aktuelles Event: ${event.title}, Kategorie: ${event.extendedProps.color}`);
-        } else if (eventStart && !eventEnd && now >= eventStart) {
-          // Wenn kein Enddatum existiert und nur das Startdatum geprüft wird
-          console.log(`Aktuelles Event ohne Endzeit: ${event.title}, Kategorie: ${event.extendedProps.color}`);
-        }
-      });
-    };
-  
-    // Rufe die Funktion alle 5 Sekunden auf
-    const intervalId = setInterval(checkCurrentEvent, 5000);
-  
-    // Aufräumen: Stoppe die Intervall-Überprüfung, wenn der Komponent unmontiert wird
-    return () => clearInterval(intervalId);
-  }, [currentEvents]);
-  
-  
-
   return (
     <>
       <HeaderTitle title="Calendar" />
       <MyEvents />
-
       <div className="bg-white rounded-xl p-8">
         <FullCalendar
           height={"85vh"}
@@ -204,20 +185,18 @@ const Calendar: React.FC = () => {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           initialView="timeGridWeek"
-          firstDay={1}
           editable={true}
           selectable={true}
-          scrollTime={new Date().toISOString().slice(11, 19)}
           selectMirror={true}
           dayMaxEvents={true}
           select={handleDateClick}
-          eventsSet={(events) => setCurrentEvents(events)}
+          eventsSet={handleEventsSet}
           initialEvents={
             typeof window !== "undefined"
               ? JSON.parse(localStorage.getItem("events") || "[]")
               : []
           }
-          nowIndicator={true}
+          scrollTime={new Date().toISOString().slice(11, 19)}
           slotDuration="00:30:00"
           slotLabelInterval="01:00:00"
           slotLabelFormat={{
@@ -247,7 +226,7 @@ const Calendar: React.FC = () => {
               date.getMonth() === today.getMonth() &&
               date.getDate() === today.getDate();
 
-            const weekdayShort = new Intl.DateTimeFormat("de-DE", {
+            const weekdayShort = new Intl.DateTimeFormat("en-US", {
               weekday: "short",
             }).format(date);
 
@@ -267,8 +246,39 @@ const Calendar: React.FC = () => {
             );
           }}
           eventContent={(args: EventContentArg) => {
-            const { event } = args;
+            const { event, view } = args;
             const eventColor = event.extendedProps.color;
+
+            const now = new Date();
+            const eventStart = event.start ? new Date(event.start) : null;
+            const eventEnd = event.end ? new Date(event.end) : null;
+
+            const isCurrentEvent =
+              eventStart &&
+              ((!eventEnd && now >= eventStart) ||
+                (eventEnd && now >= eventStart && now <= eventEnd));
+
+            // const activeCategory = isCurrentEvent
+            //   ? event.extendedProps.category
+            //   : null;
+
+            const allEvents = view.calendar.getEvents();
+
+            const isAnyActiveCategoryEvent = allEvents.some((ev) => {
+              const evStart = ev.start ? new Date(ev.start) : null;
+              const evEnd = ev.end ? new Date(ev.end) : null;
+              const isEventActive =
+                evStart &&
+                ((!evEnd && now >= evStart) ||
+                  (evEnd && now >= evStart && now <= evEnd));
+              return (
+                isEventActive &&
+                ev.extendedProps.category === event.extendedProps.category
+              );
+            });
+
+            const opacity =
+              isCurrentEvent || isAnyActiveCategoryEvent ? 1 : 0.5;
 
             const startDate = event.start
               ? event.allDay
@@ -293,7 +303,8 @@ const Calendar: React.FC = () => {
                 onContextMenu={(e) => handleRightClick(event, e)}
                 className="cursor-context-menu relative"
                 style={{
-                  backgroundColor: eventColor,  
+                  backgroundColor: eventColor,
+                  opacity,
                 }}
               >
                 <div className="flex flex-col justify-start text-black">
@@ -447,11 +458,15 @@ const Calendar: React.FC = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 My Event's Categories
               </label>
-              <CategorySelect
-                categories={eventCategories}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-              />
+              {eventCategories.length > 0 ? (
+                <CategorySelect
+                  categories={eventCategories}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                />
+              ) : (
+                <p className="text-gray-500 text-sm pl-4">No Event Category</p>
+              )}
             </div>
 
             <div className="flex justify-between gap-2">
