@@ -8,8 +8,8 @@ ThinkNest is a digital learning coach app designed to help students manage their
 - **📅 Calendar:** Manage your events in categorized event categories with perfect focus for working.
 - **📝 Notes System:** A note-taking app with organized note categories, making it easier to access and review important information.
 - **✔️ To-Do List:** Track your tasks and ensure you complete them on time.
-- **📈 Projects:** ....
-- **🛠️ Settings :** ....
+- **📈 Projects:** Organize and manage projects efficiently. Create new projects, assign tasks, set deadlines, and track progress.
+- **🛠️ Settings :** Customize the application according to your preferences. Update your profile, change the theme, and configure other application settings.
 
 ## 🎯 Goals
 
