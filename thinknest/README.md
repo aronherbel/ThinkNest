@@ -8,8 +8,8 @@ ThinkNest is a digital learning coach app designed to help students manage their
 - **📅 Calendar:** Manage your events in categorized event categories with perfect focus for working.
 - **📝 Notes System:** A note-taking app with organized note categories, making it easier to access and review important information.
 - **✔️ To-Do List:** Track your tasks and ensure you complete them on time.
-- **📈 Habit Tracker:** Build and maintain productive habits with our integrated habit tracker.
-- **🛠️ Organization Tools:** Various tools to help you stay organized and focused on your tasks.
+- **📈 Projects:** ....
+- **🛠️ Settings :** ....
 
 ## 🎯 Goals
 
@@ -21,7 +21,7 @@ To get started with ThinkNest, follow these steps:
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/yourusername/thinknest.git
+   git clone https://github.com/ajnurademi/thinknest.git
    ```
 2. **Navigate to the project directory:**
    ```sh
@@ -42,11 +42,7 @@ To get started with ThinkNest, follow these steps:
 - [**Aron Herbel**](https://github.com/aronherbel)
 - [**Abdullazit Hassen Abdella**](https://github.com/Abdullaziz213)
 
-We welcome contributions from the community. If you are interested in contributing, please read our [Contributing Guidelines](CONTRIBUTING.md).
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+We welcome contributions from the community :)
 
 ## 📬 Contact
 
