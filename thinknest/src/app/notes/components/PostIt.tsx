@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Definiere die Typen für die Props, die das Component erwartet
 interface PostItProps {
@@ -9,23 +9,19 @@ interface PostItProps {
   };
   onUpdate: (updatedData: { note?: string; topic?: string; color?: string }) => void;
   onDelete: () => void;
-  availableTopics: string[];
-  addTopic: (newTopic: string) => void;
+  availableTopics: { name: string; color: string }[];
 }
 
-const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopics, addTopic }) => {
+const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopics }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [newTopic, setNewTopic] = useState('');
 
-  const colors = ['yellow', 'green', 'red', 'blue']; // Begrenzte Farbpalette
-
-  const handleAddTopic = () => {
-    if (newTopic.trim() !== '') {
-      addTopic(newTopic.trim());
-      onUpdate({ topic: newTopic.trim() });
-      setNewTopic('');
+  useEffect(() => {
+    // Automatisch die Farbe setzen, wenn das Thema geändert wird
+    const selectedTopic = availableTopics.find((topic) => topic.name === data.topic);
+    if (selectedTopic && selectedTopic.color !== data.color) {
+      onUpdate({ color: selectedTopic.color });
     }
-  };
+  }, [data.topic, availableTopics, onUpdate, data.color]);
 
   return (
     <div
@@ -51,34 +47,8 @@ const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopi
             onChange={(e) => onUpdate({ topic: e.target.value })}
           >
             {availableTopics.map((topic) => (
-              <option key={topic} value={topic}>
-                {topic}
-              </option>
-            ))}
-          </select>
-          <div className="flex items-center space-x-2 mb-2">
-            <input
-              type="text"
-              className="flex-1 p-0.5 border rounded"
-              value={newTopic}
-              onChange={(e) => setNewTopic(e.target.value)}
-              placeholder="Neues Thema hinzufügen"
-            />
-            <button
-              className="px-2 py-1 text-white bg-blue-500 rounded"
-              onClick={handleAddTopic}
-            >
-              Hinzufügen
-            </button>
-          </div>
-          <select
-            className="p-0.3 mb-2 border rounded"
-            value={data.color}
-            onChange={(e) => onUpdate({ color: e.target.value })}
-          >
-            {colors.map((color) => (
-              <option key={color} value={color}>
-                {color.charAt(0).toUpperCase() + color.slice(1)}
+              <option key={topic.name} value={topic.name}>
+                {topic.name}
               </option>
             ))}
           </select>
