@@ -1,5 +1,6 @@
 'use client';
 
+import HeaderTitle from "@/components/HeaderTitle";
 import { useState, useEffect } from 'react';
 import PostIt from './components/PostIt';
 import PostItToolbar from './components/PostItToolbar';
@@ -67,12 +68,14 @@ export default function Home() {
   };
 
   return (
+    <div className="min-h-screen">
+      <HeaderTitle title="Notes" />
     <div className="flex h-screen">
       <div className="w-1/4 bg-gray-100 p-4">
         <PostItToolbar addPostIt={addPostIt} />
       </div>
 
-      <div className="flex-1 bg-blue-50 p-4">
+      <div className="flex-1 bg-gray-100 p-4">
         {postIts.length > 0 ? (
           <div className="flex flex-wrap gap-3" style={{ justifyContent: 'flex-start' }}>
             {postIts.map((postIt) => (
@@ -89,6 +92,7 @@ export default function Home() {
           <p className="text-gray-500">Keine Post-Its vorhanden. Erstellen Sie ein neues Post-It, um zu starten.</p>
         )}
       </div>
+    </div>
     </div>
   );
 }
