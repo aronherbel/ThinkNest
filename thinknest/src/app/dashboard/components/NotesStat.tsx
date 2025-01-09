@@ -54,39 +54,43 @@ const NotesStat = () => {
 
         {/* Kategorien und Notizen */}
         <div className="space-y-6">
-          {Object.keys(groupedNotes).map((category) => (
-            <div key={category} className="pb-4">
-              <div
-                className="flex justify-between items-center cursor-pointer p-3 rounded-lg text-black"
-                style={{ backgroundColor: groupedNotes[category][0].color }}
-                onClick={() => toggleCategory(category)}
-              >
-                <p className="text-sm font-semibold">{category || "Ohne Thema"}</p>
-                <Image
-                  src={
-                    collapsedCategories.includes(category)
-                      ? "/assets/icons/arrow_drop_down_icon.svg"
-                      : "/assets/icons/arrow_drop_up_icon.svg"
-                  }
-                  alt="toggle_icon"
-                  width={12}
-                  height={12}
-                />
-              </div>
-              {!collapsedCategories.includes(category) && (
-                <div className="space-y-3 mt-3">
-                  {groupedNotes[category].map((note, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between bg-gray-50 p-2 rounded-md"
-                    >
-                      <p className="text-sm font-medium text-black">{note.note}</p>
-                    </div>
-                  ))}
+          {notes.length === 0 ? (
+            <p className="text-gray-500 pl-5 text-sm mt-6">No notes available</p>
+          ) : (
+            Object.keys(groupedNotes).map((category) => (
+              <div key={category} className="pb-4">
+                <div
+                  className="flex justify-between items-center cursor-pointer p-3 rounded-lg text-black"
+                  style={{ backgroundColor: groupedNotes[category][0].color }}
+                  onClick={() => toggleCategory(category)}
+                >
+                  <p className="text-sm font-semibold">{category || "Ohne Thema"}</p>
+                  <Image
+                    src={
+                      collapsedCategories.includes(category)
+                        ? "/assets/icons/arrow_drop_down_icon.svg"
+                        : "/assets/icons/arrow_drop_up_icon.svg"
+                    }
+                    alt="toggle_icon"
+                    width={12}
+                    height={12}
+                  />
                 </div>
-              )}
-            </div>
-          ))}
+                {!collapsedCategories.includes(category) && (
+                  <div className="space-y-3 mt-3">
+                    {groupedNotes[category].map((note, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-betwee p-2 rounded-md"
+                      >
+                        <p className="text-sm font-medium text-black">{note.note}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
 
