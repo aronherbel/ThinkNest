@@ -80,7 +80,7 @@ const ToDo = () => {
     <div className="min-h-screen">
       <HeaderTitle title="To Do" />
 
-      <MyTodos />
+      {/* <MyTodos /> */}
 
       <div className="bg-white p-6 rounded-lg">
         <h2 className="text-xl font-bold mb-4">Add a To Do</h2>
