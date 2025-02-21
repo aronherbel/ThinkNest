@@ -28,13 +28,14 @@ const WeeklyActivity = () => {
   }, []);
 
   return (
-    <>
+    <div  >
       <DashboardStats 
         value={weeklyActivity} 
         iconPath="/assets/icons/twoway_icon.svg" 
         label="Weekly Activity" 
+        
       />
-    </>
+    </div>
   );
 };
 

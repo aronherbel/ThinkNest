@@ -26,13 +26,13 @@ const WorkedToday = () => {
   }, []);
 
   return (
-    <>
+    <div className="rounded-lg">
       <DashboardStats 
         value={workedHours} 
         iconPath="/assets/icons/workedweek_icon.svg" 
         label="Worked Today" 
       />
-    </>
+    </div>
   );
 }
 

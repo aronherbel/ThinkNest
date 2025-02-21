@@ -20,6 +20,7 @@ interface EventCategory {
 export default function Home() {
   const [postIts, setPostIts] = useState<PostItData[]>([]);
   const [categories, setCategories] = useState<EventCategory[]>([]);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Daten aus localStorage laden
   useEffect(() => {
@@ -71,11 +72,12 @@ export default function Home() {
     <div className="min-h-screen">
       <HeaderTitle title="Notes" />
     <div className="flex h-screen">
-      <div className="w-1/4">
+      {/* Toolbar */}
+      <div className="w-1/4 bg-gray-100 p-4 dark:bg-gray-800 transition-colors duration-300">
         <PostItToolbar addPostIt={addPostIt} />
       </div>
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 dark:bg-gray-800 transition-colors duration-300">
         {postIts.length > 0 ? (
           <div className="flex flex-wrap gap-3" style={{ justifyContent: 'flex-start' }}>
             {postIts.map((postIt) => (

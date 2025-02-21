@@ -36,7 +36,7 @@ const Timer = () => {
   return (
     <>
     <div>
-      <div className="flex items-center space-x-3 bg-white p-4 rounded-xl">
+      <div className="flex items-center space-x-3 bg-white p-4 rounded-xl  dark:bg-sky-950 transition-colors duration-300">
         <div className="flex items-center justify-center text-black text-sm ">
           {isTimerRunning && timer !== null ? formatTime(timer) : "EventTimer"}
         </div>

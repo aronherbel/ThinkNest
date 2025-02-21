@@ -18,13 +18,14 @@ const NavBar = () => {
   ];
 
   return (
-    <div className="flex justify-center align-items-center mt-5 text-sm">
-      <div className="flex flex-col items-start space-y-4">
+    <div className="flex justify-center align-items-center mt-5 text-sm background">
+      <div className="flex flex-col items-start space-y-4" >
         {navItems.map(({ href, icon, label, width, height }) => {
           const isActive = pathname === href;
           const iconPath = isActive
             ? `/assets/icons/${icon.replace(".svg", "_active.svg")}`
             : `/assets/icons/${icon}`;
+          const iconClass = isActive ? "navbar-icon-active" : "navbar-icon";
           return (
             <div
               key={href}
@@ -33,7 +34,7 @@ const NavBar = () => {
               }`}
             >
               <Link href={href} className="flex justify-between align-middle">
-                <Image src={iconPath} alt={label} width={width} height={height} className="mr-3" />
+                <Image src={iconPath} alt={label} width={width} height={height} className={`mr-3 ${iconClass}`} />
                 {label}
               </Link>
             </div>

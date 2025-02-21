@@ -26,13 +26,13 @@ const RemainingToday = () => {
   }, []);
 
   return (
-    <>
+    <div >
       <DashboardStats
         value={remainingHours}
         iconPath="/assets/icons/workedweek_icon.svg"
         label="Remaining Today"
       />
-    </>
+    </div>
   );
 }
 
