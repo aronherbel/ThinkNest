@@ -20,6 +20,7 @@ interface Todo {
 }
 
 const ToDo = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -82,7 +83,7 @@ const ToDo = () => {
 
       <MyTodos />
 
-      <div className="bg-white p-6 rounded-lg">
+      <div className="bg-white p-6 rounded-lg  dark:bg-sky-950 transition-colors duration-300">
         <h2 className="text-xl font-bold mb-4">Add a To Do</h2>
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <input
@@ -90,12 +91,12 @@ const ToDo = () => {
             placeholder="Add a new to-do"
             value={inputValue || ""}
             onChange={(e) => setInputValue(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg flex-grow"
+            className="p-2 border border-gray-300 rounded-lg flex-grow  dark:bg-sky-950 transition-colors duration-300"
           />
           <select
             value={selectedEvent || ""}
             onChange={(e) => setSelectedEvent(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg"
+            className="p-2 border border-gray-300 rounded-lg  dark:bg-sky-950 transition-colors duration-300"
           >
             <option value="" disabled>
               Select Category
@@ -110,7 +111,7 @@ const ToDo = () => {
             type="date"
             value={selectedDate || ""}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg"
+            className="p-2 border border-gray-300 rounded-lg  dark:bg-sky-950 transition-colors duration-300"
           />
           <button
             onClick={addTodo}

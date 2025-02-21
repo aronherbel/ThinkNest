@@ -35,6 +35,7 @@ const Calendar: React.FC = () => {
     event: EventApi | null;
   }>({ visible: false, x: 0, y: 0, event: null });
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [location, setLocation] = useState<string>("");
@@ -66,9 +67,9 @@ const Calendar: React.FC = () => {
     });
     const localEnd = selected.end
       ? new Date(selected.end).toLocaleString("sv-SE", {
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          hour12: false,
-        })
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        hour12: false,
+      })
       : "";
 
     setStartDate(localStart.replace(" ", "T"));
@@ -175,7 +176,7 @@ const Calendar: React.FC = () => {
     <>
       <HeaderTitle title="Calendar" />
       <MyEvents />
-      <div className="bg-white rounded-xl p-8">
+      <div className="bg-gray-50 rounded-xl p-8  dark:bg-sky-950 transition-colors duration-300">
         <FullCalendar
           height={"85vh"}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -284,18 +285,18 @@ const Calendar: React.FC = () => {
               ? event.allDay
                 ? new Date(event.start).toLocaleDateString("de-DE")
                 : new Date(event.start).toLocaleString("de-DE", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
               : "";
 
             const endDate = event.end
               ? event.allDay
                 ? new Date(event.end).toLocaleDateString("de-DE")
                 : new Date(event.end).toLocaleString("de-DE", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
               : "";
 
             return (
@@ -321,7 +322,7 @@ const Calendar: React.FC = () => {
 
       {contextMenu.visible && (
         <div
-          className="absolute bg-white border border-gray-300 rounded-md shadow-md z-50 p-2"
+          className="absolute bg-sky-50 border border-gray-300 rounded-md shadow-md z-50 p-2"
           style={{
             top: contextMenu.y,
             left: contextMenu.x,
@@ -343,7 +344,7 @@ const Calendar: React.FC = () => {
           </DialogHeader>
           <form className="space-y-4" onSubmit={handleAddEvent}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1 ">
                 Event Title
               </label>
               <input

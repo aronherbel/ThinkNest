@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const NotesStat = () => {
   return (
-    <div className="bg-white rounded-xl min-w-[35rem] relative flex flex-col justify-between">
+    <div className="bg-white rounded-xl min-w-[35rem] relative flex flex-col justify-between  dark:bg-sky-950 transition-colors duration-300">
       <div className="px-8 py-8">
         <div className="flex justify-between text-semibold mb-4 text-lg">
           <p>Notes</p>

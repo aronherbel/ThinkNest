@@ -15,6 +15,7 @@ interface PostItData {
 export default function Home() {
   const [postIts, setPostIts] = useState<PostItData[]>([]);
   const [topics, setTopics] = useState<string[]>(['General', 'Work', 'Personal']);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Lade gespeicherte Notizen und Themen aus localStorage
   useEffect(() => {
@@ -70,12 +71,12 @@ export default function Home() {
   return (
     <div className="flex h-screen">
       {/* Toolbar */}
-      <div className="w-1/4 bg-gray-100 p-4">
+      <div className="w-1/4 bg-gray-100 p-4 dark:bg-gray-800 transition-colors duration-300">
         <PostItToolbar addPostIt={addPostIt} />
       </div>
 
       {/* Post-it Container */}
-      <div className="flex-1 bg-blue-50 p-4">
+      <div className="flex-1 bg-blue-50 p-4 dark:bg-gray-800 transition-colors duration-300">
         <div
           className="flex flex-nowrap gap-4"
           style={{
