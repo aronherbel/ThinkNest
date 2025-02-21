@@ -20,7 +20,7 @@ interface EventCategory {
 export default function Home() {
   const [postIts, setPostIts] = useState<PostItData[]>([]);
   const [categories, setCategories] = useState<EventCategory[]>([]);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  
 
   // Daten aus localStorage laden
   useEffect(() => {
