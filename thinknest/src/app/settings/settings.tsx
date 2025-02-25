@@ -68,52 +68,58 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
 
       {/* Profilbild Upload */}
       <h1 className="text-xl mt-11">Personal Information</h1>
-      <div className="mt-2 p-5 border-black dark:border-gray-900 border-4 rounded-2xl transition-colors duration-300 flex justify-between items-center">
-        <div className="">
-          <div className="" style={{ marginBottom: "30%" }}>
-            <p className="text-lg">Profile Picture</p>
-            <p className="font-medium mb-11" >Upload Profile Picture:</p>
+      <div className="mt-2 p-5 border-black dark:border-gray-900 border-4 rounded-2xl transition-colors duration-300">
 
-          </div>
-          <p className="text-lg mt-11">Username</p>
-          <p className="mt-3">Change Username:</p>
+        <div className=" flex justify-between items-center mb-8">
           <div className="">
-            <p className="font-medium">Current Username: <span className="text-lg font-bold">{userName}</span></p>
+            <div className="" style={{ marginBottom: "30%" }}>
+              <p className="text-lg">Profile Picture</p>
+            </div>
+          </div>
+          <div className="">
+            <input type="file" accept="image/*" onChange={handleImageUpload} className="" />
+            {selectedImage && (
+              <div className="flex flex-col items-start">
+                <img src={selectedImage} alt="Selected" className="mt-2 w-16 h-16 rounded-full object-cover ms-9" />
+                <button
+                  onClick={handleResetProfilePicture}
+                  className="mt-2 px-2 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-800"
+                >
+                  Reset Profile Picture
+                </button>
+              </div>
+            )}
           </div>
         </div>
-        <div className="">
-          <input type="file" accept="image/*" onChange={handleImageUpload} className="" />
-          {selectedImage && (
-            <div className="flex flex-col items-start">
-              <img src={selectedImage} alt="Selected" className=" w-16 h-16 rounded-full object-cover ms-9" />
+        <hr/>
+        <div className=" flex justify-between items-center">
+          <div className="">
+            <p className="text-lg mt-6">Username</p>
+            <p className="mt-3">Change Username:</p>
+            <div className="">
+              <p className="font-medium">Current Username: <span className="text-lg font-bold">{userName}</span></p>
+            </div>
+          </div>
+          <div className="">
+
+            <div className="mt-10">
+
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="mt-11 p-2 border border-gray-300 rounded w-full  dark:bg-sky-950 transition-colors duration-300"
+                placeholder="Enter new username"
+              />
               <button
-                onClick={handleResetProfilePicture}
-                className="mt-11 px-2 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-800"
+                onClick={handleUserNameChange}
+                className="mt-1 px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-800"
               >
-                Reset Profile Picture
+                Confirm
               </button>
             </div>
-          )}
-          <div className="mt-14">
-
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              className="mt-11 p-2 border border-gray-300 rounded w-full  dark:bg-sky-950 transition-colors duration-300"
-              placeholder="Enter new username"
-            />
-            <button
-              onClick={handleUserNameChange}
-              className="mt-1 px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-800"
-            >
-              Confirm
-            </button>
           </div>
         </div>
-        {/* Benutzername ändern */}
-
-
       </div>
 
       <div className="mt-14">
