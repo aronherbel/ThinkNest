@@ -1,82 +1,26 @@
-import { useState, useEffect } from 'react';
-
 interface PostItProps {
   data: {
-    note: string;
-    topic: string;
+    id: number;
+    title: string;
     color: string;
+    topic: string;
+    note: string;
   };
-  onUpdate: (updatedData: { note?: string; topic?: string; color?: string }) => void;
-  onDelete: () => void;
-  availableTopics: { name: string; color: string }[];
+  onClick: () => void;
 }
 
-const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopics }) => {
-  const [isEditing, setIsEditing] = useState(false);
-
-  useEffect(() => {
-    const selectedTopic = availableTopics.find((topic) => topic.name === data.topic);
-    if (selectedTopic && selectedTopic.color !== data.color) {
-      onUpdate({ color: selectedTopic.color });
-    }
-  }, [data.topic, availableTopics, onUpdate, data.color]);
-
+const PostIt: React.FC<PostItProps> = ({ data, onClick }) => {
   return (
     <div
-      className={`flex flex-col p-4 shadow-md rounded-md text-gray-800`}
+      className="p-4 shadow-md rounded-md text-Black-800 cursor-pointer"
       style={{
         backgroundColor: data.color,
-        width: '250px',
-        height: '250px',
+        width: "170px",
+        height: "50px",
       }}
-      onClick={() => !isEditing && setIsEditing(true)}
+      onClick={onClick}
     >
-      {isEditing ? (
-        <div className="flex flex-col h-full">
-          <textarea
-            className="flex-1 p-3 mb-2 border rounded resize-none"
-            value={data.note}
-            onChange={(e) => onUpdate({ note: e.target.value })}
-            placeholder="Notiz schreiben..."
-          />
-          <select
-            className="p-0.5 mb-2 border rounded"
-            value={data.topic}
-            onChange={(e) => onUpdate({ topic: e.target.value })}
-          >
-            {availableTopics.map((topic) => (
-              <option key={topic.name} value={topic.name}>
-                {topic.name}
-              </option>
-            ))}
-          </select>
-          <button
-            className="px-4 py-0.5 text-white bg-red-500 rounded"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (confirm('Möchtest du dieses Post-it löschen?')) {
-                onDelete();
-              }
-            }}
-          >
-            Löschen
-          </button>
-          <button
-            className="mt-2 px-4 py-0.5 text-white bg-gray-700 rounded"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsEditing(false);
-            }}
-          >
-            Speichern
-          </button>
-        </div>
-      ) : (
-        <>
-          <h4 className="font-bold mb-2">{data.topic || 'Kein Thema'}</h4>
-          <p className="flex-1 text-sm">{data.note || 'Klicken zum Bearbeiten'}</p>
-        </>
-      )}
+      <h4 className="font-bold">{data.title || "Ohne Titel"}</h4>
     </div>
   );
 };
