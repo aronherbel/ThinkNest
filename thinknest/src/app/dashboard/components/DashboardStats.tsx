@@ -9,7 +9,7 @@ type DashboardStatsProps = {
 
 const DashboardStats: React.FC<DashboardStatsProps>  = ({ value, iconPath, label }) => {
   return (
-    <div className="bg-white rounded-xl min-w-[16rem] mx-7 ">
+    <div className="bg-white rounded-xl min-w-[16rem] mx-7  dark:bg-sky-950 transition-colors duration-300">
       <div className="px-4 py-3">
         <div className="flex justify-between text-md">
           <p>{label}</p>

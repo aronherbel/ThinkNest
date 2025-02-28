@@ -16,11 +16,16 @@ const Dashboard = () => {
         <HeaderTitle title="Today" />
         <Timer />
       </div>
-
-      <div className=" flex justify-center mb-10">
-        <WorkedToday />
-        <WeeklyActivity />
-        <RemainingWeek />
+      <div className=" flex justify-center mb-10 ">
+        <div className="">
+          <WorkedToday />
+        </div>
+        <div className="">
+          <WeeklyActivity />
+        </div>
+        <div className="">
+          <RemainingWeek />
+        </div>
       </div>
 
       <div>

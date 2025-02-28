@@ -38,7 +38,7 @@ const NotesStat = () => {
   }, {} as Record<string, Note[]>);
 
   return (
-    <div className="bg-white rounded-xl min-w-[35rem] relative flex flex-col justify-between">
+    <div className="bg-white rounded-xl min-w-[35rem] relative flex flex-col justify-between  dark:bg-sky-950 transition-colors duration-300">
       <div className="px-8 py-8">
         <div className="flex justify-between text-semibold mb-4 text-lg">
           <p>Notes</p>
@@ -52,41 +52,25 @@ const NotesStat = () => {
         </div>
         <p className="text-sm text-[#9A9A9A] font-semibold mb-6">Notizen</p>
 
-        {/* Kategorien und Notizen */}
-        <div className="space-y-6">
-          {Object.keys(groupedNotes).map((category) => (
-            <div key={category} className="pb-4">
-              <div
-                className="flex justify-between items-center cursor-pointer p-3 rounded-lg text-black"
-                style={{ backgroundColor: groupedNotes[category][0].color }}
-                onClick={() => toggleCategory(category)}
-              >
-                <p className="text-sm font-semibold">{category || "Ohne Thema"}</p>
-                <Image
-                  src={
-                    collapsedCategories.includes(category)
-                      ? "/assets/icons/arrow_drop_down_icon.svg"
-                      : "/assets/icons/arrow_drop_up_icon.svg"
-                  }
-                  alt="toggle_icon"
-                  width={12}
-                  height={12}
-                />
-              </div>
-              {!collapsedCategories.includes(category) && (
-                <div className="space-y-3 mt-3">
-                  {groupedNotes[category].map((note, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between bg-gray-50 p-2 rounded-md"
-                    >
-                      <p className="text-sm font-medium text-black">{note.note}</p>
-                    </div>
-                  ))}
+        {/* Task List */}
+        <div className="space-y-4 pt-6">
+          {/* Task 1 */}
+          <div className="border-[0.5px] border-[#F1F1F1] rounded-xl">
+            <div className="flex items-center justify-between p-2">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-green-100 text-green-600 flex items-center justify-center rounded-full">
+                  <Image
+                    src="/assets/icons/notes_icon_active.svg"
+                    alt="todo_icon"
+                    width={12}
+                    height={12}
+                  />
                 </div>
-              )}
+                <p className="text-xs font-medium">category</p>
+              </div>
+              <div className="w-36"></div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
 

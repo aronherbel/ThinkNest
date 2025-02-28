@@ -96,9 +96,9 @@ const colors = [
 
 return (
   <div className="mb-10 flex justify-start">
-    <div className="flex flex-col rounded-xl bg-gray-50 p-6 space-y-7 items-start  dark:bg-sky-950 transition-colors duration-300">
+    <div className="flex flex-col rounded-xl bg-white p-6 space-y-7 items-start  dark:bg-sky-950 transition-colors duration-300">
       <div className="flex justify-between w-full items-center space-x-8">
-        <p className="text-[1.1rem] font-bold">My Event's</p>
+        <p className="text-[1.1rem] font-bold">My To Do's</p>
         <div className="flex space-x-4 items-center">
           <Image
             src="/assets/icons/create_icon.svg"
@@ -120,7 +120,7 @@ return (
       </div>
 
       {isAddingEventCategory && (
-        <div className="bg-gray-100 p-4 rounded-lg w-full space-y-4">
+        <div className="bg-gray-100 p-4 rounded-lg w-full space-y-4 dark:bg-sky-950 transition-colors duration-300">
           <input
             type="text"
             placeholder="Event name"

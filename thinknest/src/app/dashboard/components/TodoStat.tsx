@@ -40,7 +40,7 @@ const TodoStat = () => {
   }, {} as Record<string, Todo[]>);
 
   return (
-    <div className="bg-white rounded-xl min-w-[35rem] relative flex flex-col justify-between">
+    <div className="bg-white rounded-xl min-w-[35rem] relative flex flex-col justify-between  dark:bg-sky-950 transition-colors duration-300">
       <div className="px-8 py-8">
         <div className="flex justify-between text-semibold mb-4 text-lg">
           <p>To Do</p>
@@ -52,7 +52,11 @@ const TodoStat = () => {
             className="cursor-pointer"
           />
         </div>
-        <p className="text-sm text-[#9A9A9A] font-semibold mb-6">To Dos</p>
+        <p className="text-sm text-[#9A9A9A] font-semibold mb-6">To-Do's</p>
+
+        {todos.length === 0 ? (
+          <p className="pl-5 text-gray-500 text-sm">No To-Do's available</p>
+        ) : null}
 
         {/* Kategorien und Aufgaben */}
         <div className="space-y-6">
@@ -67,8 +71,8 @@ const TodoStat = () => {
                 <Image
                   src={
                     collapsedCategories.includes(category)
-                      ? "/assets/icons/arrow_drop_down_icon.svg"
-                      : "/assets/icons/arrow_drop_up_icon.svg"
+                      ? "/assets/icons/arrow_drop_up_icon.svg"
+                      : "/assets/icons/arrow_drop_down_icon.svg"
                   }
                   alt="toggle_icon"
                   width={12}
