@@ -23,23 +23,20 @@ const CalendarStat = () => {
   useEffect(() => {
     const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
 
-    const todayEvents = storedEvents.filter((event: Event) => {
+    const currentEvents = storedEvents.filter((event: Event) => {
       const eventStart = new Date(event.start);
       const eventEnd = new Date(event.end);
       return (
-        eventStart.toDateString() === currentTime.toDateString() &&
-        ((new Date(event.start) <= currentTime &&
-          new Date(event.end) >= currentTime) ||
-          new Date(event.start) > currentTime)
+        eventStart <= currentTime && eventEnd >= currentTime
       );
     });
 
-    todayEvents.sort(
+    currentEvents.sort(
       (a: Event, b: Event) =>
         new Date(a.start).getTime() - new Date(b.start).getTime()
     );
 
-    setEvents(todayEvents);
+    setEvents(currentEvents);
   }, [currentTime]);
 
   return (
@@ -56,12 +53,12 @@ const CalendarStat = () => {
               className="cursor-pointer"
             />
           </div>
-          <p className="text-sm text-[#9A9A9A] font-semibold">Today</p>
+          <p className="text-sm text-[#9A9A9A] font-semibold">Now</p>
           <div className="pl-5 pt-5">
             <div className="space-y-4 mt-2">
               {events.length === 0 ? (
                 <p className="text-gray-500 text-sm">
-                  No upcoming or ongoing events today
+                  No ongoing events now
                 </p>
               ) : (
                 events.slice(0, 4).map((event) => (

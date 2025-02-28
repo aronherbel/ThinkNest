@@ -1,10 +1,12 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react';
-import PostIt from './components/PostIt';
-import PostItToolbar from './components/PostItToolbar';
+import HeaderTitle from "@/components/HeaderTitle";
+import { useState, useEffect } from "react";
+import PostIt from "./components/PostIt";
+import PostItToolbar from "./components/PostItToolbar";
+import PostItEditor from "./components/PostItEditors"; 
+import PostItDetailView from "./components/PostItDetailView"; // Neue Detailansicht
 
-// Definiere die Typen für das Post-it
 interface PostItData {
   id: number;
   title: string;
@@ -20,85 +22,97 @@ interface EventCategory {
 
 export default function Home() {
   const [postIts, setPostIts] = useState<PostItData[]>([]);
-  const [topics, setTopics] = useState<string[]>(['General', 'Work', 'Personal']);
+  const [categories, setCategories] = useState<EventCategory[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedPostIt, setSelectedPostIt] = useState<PostItData | null>(null);
 
-  // Lade gespeicherte Notizen und Themen aus localStorage
   useEffect(() => {
     const savedPostIts = localStorage.getItem("postIts");
     if (savedPostIts) {
       setPostIts(JSON.parse(savedPostIts));
     }
 
-    const savedTopics = localStorage.getItem('topics');
-    if (savedTopics) {
-      setTopics(JSON.parse(savedTopics));
+    const savedCategories = localStorage.getItem("eventCategories");
+    if (savedCategories) {
+      setCategories(JSON.parse(savedCategories));
     }
   }, []);
 
-  // Speichere Notizen und Themen in localStorage, wenn sie sich ändern
-  useEffect(() => {
-    if (postIts.length > 0) {
-      localStorage.setItem('postIts', JSON.stringify(postIts));
-    }
-  }, [postIts]);
-
-  useEffect(() => {
-    if (topics.length > 0) {
-      localStorage.setItem('topics', JSON.stringify(topics));
-    }
-  }, [topics]);
-
-  const addPostIt = () => {
-    const newPostIt = { id: Date.now(), color: 'yellow', topic: 'General', note: '' };
-    const updatedPostIts = [...postIts, newPostIt];
-    setPostIts(updatedPostIts);
+  const savePostItsToStorage = (newPostIts: PostItData[]) => {
+    setPostIts(newPostIts);
+    localStorage.setItem("postIts", JSON.stringify(newPostIts));
   };
 
-  const updatePostIt = (id: number, updated: Partial<PostItData>) => {
-    const updatedPostIts = postIts.map((postIt) =>
-      postIt.id === id ? { ...postIt, ...updated } : postIt
-    );
-    setPostIts(updatedPostIts);
+  const handleNewPostIt = () => {
+    setSelectedPostIt({ id: Date.now(), title: "", color: "yellow", topic: "", note: "" });
+    setIsEditing(true);
+  };
+
+  const savePostIt = (postIt: PostItData) => {
+    const updatedPostIts = postIts.some((p) => p.id === postIt.id)
+      ? postIts.map((p) => (p.id === postIt.id ? postIt : p))
+      : [...postIts, postIt];
+
+    savePostItsToStorage(updatedPostIts);
+    setIsEditing(false);
+    setSelectedPostIt(null);
   };
 
   const deletePostIt = (id: number) => {
-    const updatedPostIts = postIts.filter((postIt) => postIt.id !== id);
-    setPostIts(updatedPostIts);
+    savePostItsToStorage(postIts.filter((postIt) => postIt.id !== id));
+    setIsEditing(false);
+    setSelectedPostIt(null);
   };
 
-  const addTopic = (newTopic: string) => {
-    if (!topics.includes(newTopic)) {
-      const updatedTopics = [...topics, newTopic];
-      setTopics(updatedTopics);
-    }
-  };
+  const groupedPostIts = postIts.reduce((acc, postIt) => {
+    const category = postIt.topic || "Ohne Thema";
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(postIt);
+    return acc;
+  }, {} as Record<string, PostItData[]>);
 
   return (
-    <div className="flex h-screen">
-      {/* Toolbar */}
-      <div className="w-1/4 bg-gray-100 p-4">
-        <PostItToolbar addPostIt={addPostIt} />
-      </div>
-
-      {/* Post-it Container */}
-      <div className="flex-1 bg-blue-50 p-4">
-        <div
-          className="flex flex-nowrap gap-4"
-          style={{
-            justifyContent: 'flex-start', // Post-its linksbündig
-          }}
-        >
-          {postIts.map((postIt) => (
-            <PostIt
-              key={postIt.id}
-              data={postIt}
-              availableTopics={topics}
-              addTopic={addTopic}
-              onUpdate={(updated) => updatePostIt(postIt.id, updated)}
-              onDelete={() => deletePostIt(postIt.id)}
-            />
-          ))}
-        </div>
+    <div className="min-h-screen">
+      <HeaderTitle title="Notes" />
+      <div className="flex h-screen">
+        {isEditing ? (
+          <PostItEditor
+            postIt={selectedPostIt!}
+            categories={categories}
+            onSave={savePostIt}
+            onCancel={() => setIsEditing(false)}
+            onStop={() => setSelectedPostIt(null)}
+            onDelete={deletePostIt} 
+          />
+        ) : selectedPostIt ? (
+          <PostItDetailView 
+            postIt={selectedPostIt} 
+            onEdit={() => setIsEditing(true)} 
+            onClose={() => setSelectedPostIt(null)} 
+          />
+        ) : (
+          <>
+            <div className="w-1/4 bg-gray-100 p-4">
+              <PostItToolbar addPostIt={handleNewPostIt} />
+            </div>
+            <div className="flex-1 bg-gray-100 p-4 overflow-auto">
+              {Object.keys(groupedPostIts).map((category) => (
+                <div key={category} className="mb-6">
+                  <h2 className="font-bold mb-2">{category}</h2>
+                  <div className="flex flex-wrap gap-3">
+                    {groupedPostIts[category].map((postIt) => (
+                      <PostIt
+                        key={postIt.id}
+                        data={postIt}
+                        onClick={() => setSelectedPostIt(postIt)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,116 +1,26 @@
-import { useState } from 'react';
-
-// Definiere die Typen für die Props, die das Component erwartet
 interface PostItProps {
   data: {
     id: number;
     title: string;
     color: string;
     topic: string;
-    color: string;
+    note: string;
   };
-  onUpdate: (updatedData: { note?: string; topic?: string; color?: string }) => void;
-  onDelete: () => void;
-  availableTopics: string[];
-  addTopic: (newTopic: string) => void;
+  onClick: () => void;
 }
 
-const PostIt: React.FC<PostItProps> = ({ data, onUpdate, onDelete, availableTopics, addTopic }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [newTopic, setNewTopic] = useState('');
-
-  const colors = ['yellow', 'green', 'red', 'blue']; // Begrenzte Farbpalette
-
-  const handleAddTopic = () => {
-    if (newTopic.trim() !== '') {
-      addTopic(newTopic.trim());
-      onUpdate({ topic: newTopic.trim() });
-      setNewTopic('');
-    }
-  };
-
+const PostIt: React.FC<PostItProps> = ({ data, onClick }) => {
   return (
     <div
       className="p-4 shadow-md rounded-md text-Black-800 cursor-pointer"
       style={{
         backgroundColor: data.color,
-        width: '300px',
-        height: '300px',
+        width: "170px",
+        height: "50px",
       }}
-      onClick={() => !isEditing && setIsEditing(true)}
+      onClick={onClick}
     >
-      {isEditing ? (
-        <div className="flex flex-col h-full">
-          <textarea
-            className="flex-1 p-2 mb-2 border rounded resize-none"
-            value={data.note}
-            onChange={(e) => onUpdate({ note: e.target.value })}
-            placeholder="Notiz schreiben..."
-          />
-          <select
-            className="p-2 mb-2 border rounded"
-            value={data.topic}
-            onChange={(e) => onUpdate({ topic: e.target.value })}
-          >
-            {availableTopics.map((topic) => (
-              <option key={topic} value={topic}>
-                {topic}
-              </option>
-            ))}
-          </select>
-          <div className="flex items-center space-x-2 mb-2">
-            <input
-              type="text"
-              className="flex-1 p-2 border rounded"
-              value={newTopic}
-              onChange={(e) => setNewTopic(e.target.value)}
-              placeholder="Neues Thema hinzufügen"
-            />
-            <button
-              className="px-4 py-2 text-white bg-blue-500 rounded"
-              onClick={handleAddTopic}
-            >
-              Hinzufügen
-            </button>
-          </div>
-          <select
-            className="p-2 mb-2 border rounded"
-            value={data.color}
-            onChange={(e) => onUpdate({ color: e.target.value })}
-          >
-            {colors.map((color) => (
-              <option key={color} value={color}>
-                {color.charAt(0).toUpperCase() + color.slice(1)}
-              </option>
-            ))}
-          </select>
-          <button
-            className="px-4 py-2 text-white bg-red-500 rounded"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (confirm('Möchtest du dieses Post-it löschen?')) {
-                onDelete();
-              }
-            }}
-          >
-            Löschen
-          </button>
-          <button
-            className="mt-2 px-4 py-2 text-white bg-gray-700 rounded"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsEditing(false);
-            }}
-          >
-            Speichern
-          </button>
-        </div>
-      ) : (
-        <>
-          <h4 className="font-bold mb-2">{data.topic || 'Kein Thema'}</h4>
-          <p className="flex-1 text-sm">{data.note || 'Klicken zum Bearbeiten'}</p>
-        </>
-      )}
+      <h4 className="font-bold">{data.title || "Ohne Titel"}</h4>
     </div>
   );
 };

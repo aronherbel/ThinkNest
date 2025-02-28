@@ -1,11 +1,7 @@
 "use client";
-import WeeklyActivity from "./components/WeeklyActivity";
-import WorkedToday from "./components/WorkedToday";
-import RemainingWeek from "./components/RemainingToday";
 import CalendarStat from "./components/CalendarStat";
 import TodoStat from "./components/TodoStat";
 import HeaderTitle from "@/components/HeaderTitle";
-import Timer from "@/components/Timer";
 import NotesStat from "./components/NotesStat";
 import ProjectStat from "./components/ProjectStat";
 
@@ -14,18 +10,8 @@ const Dashboard = () => {
     <>
       <div className="flex justify-between ">
         <HeaderTitle title="Today" />
-        <Timer />
       </div>
       <div className=" flex justify-center mb-10 ">
-        <div className="">
-          <WorkedToday />
-        </div>
-        <div className="">
-          <WeeklyActivity />
-        </div>
-        <div className="">
-          <RemainingWeek />
-        </div>
       </div>
 
       <div>
