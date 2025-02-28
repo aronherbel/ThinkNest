@@ -11,6 +11,7 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
+  const [imagePosition, setImagePosition] = useState<string>("center");
   const [selectedImage, setSelectedImage] = useState<string | null>(
     localStorage.getItem("profileImage") || null
   );
