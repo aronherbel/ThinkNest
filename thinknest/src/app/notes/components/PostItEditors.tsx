@@ -1,22 +1,42 @@
 import { useState } from "react";
 
+interface PostItData {
+  id: number;
+  title: string;
+  color: string;
+  topic: string;
+  note: string;
+}
+
+interface EventCategory {
+  name: string;
+  color: string;
+}
+
 interface PostItEditorProps {
-  postIt: {
-    id: number;
-    title: string;
-    color: string;
-    topic: string;
-    note: string;
-  };
-  categories: { name: string; color: string }[];
-  onSave: (postIt: { id: number; title: string; color: string; topic: string; note: string }) => void;
+  postIt: PostItData;
+  categories: EventCategory[];
+  onSave: (postIt: PostItData) => void;
   onCancel: () => void;
   onStop: () => void;
   onDelete: (id: number) => void;
 }
 
-const PostItEditor: React.FC<PostItEditorProps> = ({ postIt, categories, onSave, onCancel, onStop, onDelete }) => {
-  const [editedPostIt, setEditedPostIt] = useState(postIt);
+const PostItEditor: React.FC<PostItEditorProps> = ({
+  postIt,
+  categories,
+  onSave,
+  onCancel,
+  onStop,
+  onDelete
+}) => {
+  const [formData, setFormData] = useState<PostItData>({
+    id: postIt.id,
+    title: postIt.title || "",
+    color: postIt.color || "yellow",
+    topic: postIt.topic || "",
+    note: postIt.note || ""
+  });
 
   return (
     <div
@@ -32,17 +52,20 @@ const PostItEditor: React.FC<PostItEditorProps> = ({ postIt, categories, onSave,
           type="text"
           className="w-full p-3 border rounded mb-4 text-lg"
           placeholder="Titel..."
-          value={editedPostIt.title}
-          onChange={(e) => setEditedPostIt({ ...editedPostIt, title: e.target.value })}
+          onChange={(e) => setFormData(prev => ({
+            ...prev,
+            title: e.target.value
+          }))}
+          value={formData.title}
         />
         
         <select
           className="w-full p-3 border rounded mb-4 text-lg"
-          value={editedPostIt.topic}
+          value={formData.topic}
           onChange={(e) => {
             const newTopic = e.target.value;
             const newColor = categories.find((c) => c.name === newTopic)?.color || "yellow";
-            setEditedPostIt({ ...editedPostIt, topic: newTopic, color: newColor });
+            setFormData({ ...formData, topic: newTopic, color: newColor });
           }}
         >
           <option value="">Ohne Thema</option>
@@ -56,8 +79,8 @@ const PostItEditor: React.FC<PostItEditorProps> = ({ postIt, categories, onSave,
         <textarea
           className="w-full p-3 border rounded mb-4 h-60 text-lg"
           placeholder="Notiz..."
-          value={editedPostIt.note}
-          onChange={(e) => setEditedPostIt({ ...editedPostIt, note: e.target.value })}
+          value={formData.note}
+          onChange={(e) => setFormData({ ...formData, note: e.target.value })}
         />
 
         <div className="flex justify-between">
@@ -67,7 +90,7 @@ const PostItEditor: React.FC<PostItEditorProps> = ({ postIt, categories, onSave,
           <button className="px-6 py-2 bg-red-600 text-white rounded text-lg hover:bg-red-700" onClick={() => postIt?.id && onDelete(postIt.id)}>
             Löschen
           </button>
-          <button className="px-6 py-2 bg-black text-white rounded text-lg hover:bg-[#28AD5E]" onClick={() => onSave(editedPostIt)}>
+          <button className="px-6 py-2 bg-black text-white rounded text-lg hover:bg-[#28AD5E]" onClick={() => onSave(formData)}>
             Speichern
           </button>
         </div>

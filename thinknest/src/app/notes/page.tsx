@@ -44,7 +44,13 @@ export default function Home() {
   };
 
   const handleNewPostIt = () => {
-    setSelectedPostIt({ id: Date.now(), title: "", color: "yellow", topic: "", note: "" });
+    setSelectedPostIt({
+      id: Date.now(),
+      title: "",
+      color: "yellow",
+      topic: "",
+      note: ""
+    });
     setIsEditing(true);
   };
 
