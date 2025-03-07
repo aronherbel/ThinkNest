@@ -2,7 +2,9 @@
 
 import HeaderTitle from "@/components/HeaderTitle";
 import React, { useState, useEffect } from "react";
-import 'bootstrap-icons/font/bootstrap-icons.css';
+
+import Image from 'next/image';
+
 
 interface SettingsProps {
   isDarkMode: boolean;
@@ -18,6 +20,11 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
     "/assets/profile_img/Monkey.png",
     "/assets/profile_img/maus.jpg"
   ];
+
+  const lightmode = {
+    light: "/assets/icons/sun.svg",
+    dark: "/assets/icons/moon.svg",
+  };
 
   const storedImage = localStorage.getItem("profileImage") || profileImages[0];
 
@@ -68,19 +75,22 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
         <p>Change Background Theme</p>
         <button
           onClick={toggleTheme}
-          className="px-4 py-2 text-ml text-white bg-black dark:bg-white rounded hover:bg-green-950 dark:hover:bg-green-800 transition-colors duration-300"
-          dangerouslySetInnerHTML={{
-            __html: isDarkMode
-              ? '<i class="bi bi-brightness-high-fill text-black"></i>'
-              : '<i class="bi bi-moon-stars"></i>',
-          }}
-        ></button>
+          className="px-4 py-2 text-ml text-white border-black bg- dark:bg-green-700 rounded hover:bg-green-950 dark:hover:bg-green-800 transition-colors duration-300"
+        >
+          <Image
+            src={isDarkMode ? lightmode.light : lightmode.dark}
+            alt="Theme Icon"
+            width={24}
+            height={24}
+          />
+        </button>
+
       </div>
 
       {/* Personal Information */}
       <h1 className="text-xl mt-11">Personal Information</h1>
       <div className="mt-2 p-5 border-black dark:border-gray-900 border-4 rounded-2xl transition-colors duration-300">
-        
+
         {/* Profilbild Auswahl */}
         <p className="text-lg">Profile Picture</p>
         <div className="mb-8 justify-between items-center flex">
@@ -90,26 +100,25 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
                 key={image}
                 src={image}
                 alt="Profile"
-                className={`w-16 h-16 rounded-full cursor-pointer border-4 transition-all ${
-                  tempImage === image ? "border-blue-500" : "border-transparent"
-                }`}
+                className={`w-16 h-16 rounded-full cursor-pointer border-4 transition-all ${tempImage === image ? "border-blue-500" : "border-transparent"
+                  }`}
                 onClick={() => handleImageSelection(image)}
               />
             ))}
           </div>
           <div className="">
-          <button
-            onClick={handleConfirmImage}
-            className="mt-2 px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-800"
-          >
-            Confirm Profile Picture
-          </button>
-          <button
-            onClick={handleResetProfilePicture}
-            className="mt-2 ml-3 px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-800"
-          >
-            Reset
-          </button>
+            <button
+              onClick={handleConfirmImage}
+              className="mt-2 px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-800"
+            >
+              Confirm Profile Picture
+            </button>
+            <button
+              onClick={handleResetProfilePicture}
+              className="mt-2 ml-3 px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-800"
+            >
+              Reset
+            </button>
           </div>
         </div>
 
@@ -118,26 +127,26 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
         {/* Username ändern */}
         <div className="mt-6 justify-between items-center flex">
           <div className="">
-          <p className="text-lg">Username</p>
-          <p className="mt-3">Change Username:</p>
-          <p className="font-medium">
-            Current Username: <span className="text-lg font-bold">{userName}</span>
-          </p>
+            <p className="text-lg">Username</p>
+            <p className="mt-3">Change Username:</p>
+            <p className="font-medium">
+              Current Username: <span className="text-lg font-bold">{userName}</span>
+            </p>
           </div>
           <div className="">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="mt-3 p-2 border border-gray-300 rounded w-full dark:bg-sky-950 transition-colors duration-300"
-            placeholder="Enter new username"
-          />
-          <button
-            onClick={handleUserNameChange}
-            className="mt-2 px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-800"
-          >
-            Confirm
-          </button>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="mt-3 p-2 border border-gray-300 rounded w-full dark:bg-sky-950 transition-colors duration-300"
+              placeholder="Enter new username"
+            />
+            <button
+              onClick={handleUserNameChange}
+              className="mt-2 px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-800"
+            >
+              Confirm
+            </button>
           </div>
         </div>
       </div>
