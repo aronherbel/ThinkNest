@@ -1,19 +1,24 @@
-"use client";
-
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from 'next/image';
+import { useTheme } from "@/lib/ThemeContext";
 
-interface HeaderProps {
-  isDarkMode: boolean;
-  toggleTheme: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ isDarkMode, toggleTheme }) => {
+const Header: React.FC = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("John Doe");
+  const [mounted, setMounted] = useState(false); // Prüft, ob das Component gemountet wurde
+  const pathname = usePathname();
+
+  const lightmode = {
+    light: "/assets/icons/sun.svg",
+    dark: "/assets/icons/moon.svg",
+  };
 
   useEffect(() => {
     setProfileImage(localStorage.getItem("profileImage") || null);
     setUserName(localStorage.getItem("userName") || "John Doe");
+    setMounted(true); // Erst nach Mounting Icons anzeigen
   }, []);
 
   return (
@@ -24,18 +29,23 @@ const Header: React.FC<HeaderProps> = ({ isDarkMode, toggleTheme }) => {
         </div>
       </div>
       <div className="flex items-center space-x-3">
+        {/* Darkmode-Button nur anzeigen, wenn nicht auf /settings */}
+        {pathname !== "/settings" && mounted && (
         <button
           onClick={toggleTheme}
-          className="px-3 py-2 text-white bg-black dark:bg-white rounded hover:bg-gray-800 dark:hover:bg-gray-300 transition-colors duration-300"
-          dangerouslySetInnerHTML={{
-            __html: isDarkMode
-              ? '<i class="bi bi-brightness-high-fill text-black dark:text-white"></i>'
-              : '<i class="bi bi-moon-stars dark:text-black text-white"></i>',
-          }}
-        ></button>
+          className="px-4 py-2 dark:bg-green-700 rounded hover:bg-green-950 dark:hover:bg-green-800 transition-colors duration-300"
+        >
+          <Image
+            src={isDarkMode ? lightmode.light : lightmode.dark}
+            alt="Theme Icon"
+            width={24}
+            height={24}
+          />
+        </button>
+        )}
         <p className="font-medium text-md">{userName}</p>
         {profileImage ? (
-          <img src={profileImage} alt="Profile" className="w-7 h-7 rounded-full object-cover" />
+          <img src={profileImage} alt="Profile" className="w-12 h-12 rounded-full object-cover" />
         ) : (
           <div className="w-7 h-7 rounded-full bg-[#28AD5E]" />
         )}

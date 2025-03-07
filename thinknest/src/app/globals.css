@@ -90,3 +90,22 @@ body {
   background-color: #1e1e2e; /* Alternativ dunkleres Grau */
 }
 
+.profile-image-left {
+  margin-right: auto;
+}
+
+.profile-image-right {
+  margin-left: auto;
+}
+
+.profile-image-center {
+  margin: 0 auto;
+}
+
+.profile-image-top {
+  align-self: flex-start;
+}
+
+.profile-image-bottom {
+  align-self: flex-end;
+}
