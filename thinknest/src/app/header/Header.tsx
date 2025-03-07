@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ isDarkMode, toggleTheme }) => {
         )}
         <p className="font-medium text-md">{userName}</p>
         {profileImage ? (
-          <img src={profileImage} alt="Profile" className="w-7 h-7 rounded-full object-cover" />
+          <img src={profileImage} alt="Profile" className="w-12 h-12 rounded-full object-cover" />
         ) : (
           <div className="w-7 h-7 rounded-full bg-[#28AD5E]" />
         )}
