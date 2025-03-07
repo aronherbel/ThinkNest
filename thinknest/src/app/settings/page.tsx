@@ -1,22 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Settings from "@/app/settings/settings";
+import { useTheme } from "@/lib/ThemeContext";
 
 const SettingsPage = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
+  const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <div className="min-h-screen bg-gray-50/60 dark:bg-gray-800 transition-colors duration-300">
-      <Settings isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      <Settings isDarkMode={isDarkMode} setIsDarkMode={toggleTheme} />
     </div>
   );
 };

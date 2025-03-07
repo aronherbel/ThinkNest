@@ -1,14 +1,10 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
+import { useTheme } from "@/lib/ThemeContext";
 
-
-interface HeaderProps {
-  isDarkMode: boolean;
-  toggleTheme: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ isDarkMode, toggleTheme }) => {
+const Header: React.FC = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("John Doe");
   const [mounted, setMounted] = useState(false); // Prüft, ob das Component gemountet wurde
@@ -37,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ isDarkMode, toggleTheme }) => {
         {pathname !== "/settings" && mounted && (
         <button
           onClick={toggleTheme}
-          className="border-black px-4 py-2 dark:bg-green-700 rounded hover:bg-green-950 dark:hover:bg-green-800 transition-colors duration-300"
+          className="px-4 py-2 dark:bg-green-700 rounded hover:bg-green-950 dark:hover:bg-green-800 transition-colors duration-300"
         >
           <Image
             src={isDarkMode ? lightmode.light : lightmode.dark}

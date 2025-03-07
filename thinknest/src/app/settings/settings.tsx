@@ -109,13 +109,13 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
           <div className="">
             <button
               onClick={handleConfirmImage}
-              className="mt-2 px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-800"
+              className="mt-2 px-3 py-1 text-sm text-white bg-green-700 rounded hover:bg-green-900"
             >
               Confirm Profile Picture
             </button>
             <button
               onClick={handleResetProfilePicture}
-              className="mt-2 ml-3 px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-800"
+              className="mt-2 ml-3 px-3 py-1 text-sm text-white bg-red-700 rounded hover:bg-red-900"
             >
               Reset
             </button>
@@ -143,7 +143,7 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
             />
             <button
               onClick={handleUserNameChange}
-              className="mt-2 px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-800"
+              className="mt-2 px-3 py-1 text-sm text-white bg-blue-700 rounded hover:bg-blue-900"
             >
               Confirm
             </button>
