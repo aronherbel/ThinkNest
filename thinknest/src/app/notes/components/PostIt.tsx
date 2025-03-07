@@ -12,7 +12,7 @@ interface PostItProps {
 const PostIt: React.FC<PostItProps> = ({ data, onClick }) => {
   return (
     <div
-      className="p-4 shadow-md rounded-md text-Black-800 cursor-pointer"
+      className="p-4 shadow-md rounded-md cursor-pointer dark:shadow-zinc-800"
       style={{
         backgroundColor: data.color,
         width: "170px",
@@ -20,7 +20,7 @@ const PostIt: React.FC<PostItProps> = ({ data, onClick }) => {
       }}
       onClick={onClick}
     >
-      <h4 className="font-bold">{data.title || "Ohne Titel"}</h4>
+      <h4 className="font-bold dark:text-zinc-900">{data.title || "Ohne Titel"}</h4>
     </div>
   );
 };

@@ -78,7 +78,7 @@ export default function Home() {
   }, {} as Record<string, PostItData[]>);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-gray-800">
       <HeaderTitle title="Notes" />
       <div className="flex h-screen">
         {isEditing ? (
@@ -98,10 +98,10 @@ export default function Home() {
           />
         ) : (
           <>
-            <div className="w-1/4 bg-gray-100 p-4">
+            <div className="w-1/4 bg-gray-100 p-4 dark:bg-gray-800">
               <PostItToolbar addPostIt={handleNewPostIt} />
             </div>
-            <div className="flex-1 bg-gray-100 p-4 overflow-auto">
+            <div className="flex-1 bg-gray-100 p-4 overflow dark:bg-gray-800">
               {Object.keys(groupedPostIts).map((category) => (
                 <div key={category} className="mb-6">
                   <h2 className="font-bold mb-2">{category}</h2>

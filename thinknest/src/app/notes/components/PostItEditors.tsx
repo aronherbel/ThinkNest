@@ -44,13 +44,13 @@ const PostItEditor: React.FC<PostItEditorProps> = ({
       onClick={onStop} // Schließen, wenn außerhalb des Fensters geklickt wird
     >
       <div
-        className="bg-white p-10 rounded-lg shadow-lg w-full max-w-5xl h-[90vh] flex flex-col"
+        className="bg-white dark:bg-zinc-800 p-10 rounded-lg shadow-lg w-full max-w-5xl h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()} // Verhindert das Schließen beim Klicken innerhalb des Fensters
       >
-        <h2 className="text-2xl font-bold mb-6">Notiz bearbeiten</h2>
+        <h2 className="text-2xl font-bold mb-6 dark:text-white">Notiz bearbeiten</h2>
         <input
           type="text"
-          className="w-full p-3 border rounded mb-4 text-lg"
+          className="w-full p-3 border rounded mb-4 text-lg dark:bg-zinc-700 dark:text-white dark:border-zinc-600"
           placeholder="Titel..."
           onChange={(e) => setFormData(prev => ({
             ...prev,
@@ -60,7 +60,7 @@ const PostItEditor: React.FC<PostItEditorProps> = ({
         />
         
         <select
-          className="w-full p-3 border rounded mb-4 text-lg"
+          className="w-full p-3 border rounded mb-4 text-lg dark:bg-sky-950 dark:text-white dark:gray-800"
           value={formData.topic}
           onChange={(e) => {
             const newTopic = e.target.value;
@@ -77,20 +77,20 @@ const PostItEditor: React.FC<PostItEditorProps> = ({
         </select>
 
         <textarea
-          className="w-full p-3 border rounded mb-4 h-60 text-lg"
+          className="w-full p-3 border rounded mb-4 h-60 text-lg dark:bg-gray-700 dark:text-white dark:border-gray-600"
           placeholder="Notiz..."
           value={formData.note}
           onChange={(e) => setFormData({ ...formData, note: e.target.value })}
         />
 
         <div className="flex justify-between">
-          <button className="px-6 py-2 bg-gray-500 text-white rounded text-lg" onClick={onCancel}>
+          <button className="px-6 py-2 bg-gray-500 text-white rounded text-lg hover:bg-gray-600" onClick={onCancel}>
             Abbrechen
           </button>
           <button className="px-6 py-2 bg-red-600 text-white rounded text-lg hover:bg-red-700" onClick={() => postIt?.id && onDelete(postIt.id)}>
             Löschen
           </button>
-          <button className="px-6 py-2 bg-black text-white rounded text-lg hover:bg-[#28AD5E]" onClick={() => onSave(formData)}>
+          <button className="px-6 py-2 bg-black dark:bg-gray-700 text-white rounded text-lg hover:bg-[#28AD5E]" onClick={() => onSave(formData)}>
             Speichern
           </button>
         </div>
