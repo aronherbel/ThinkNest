@@ -13,7 +13,7 @@ const NavBar = () => {
     { href: "/calendar", icon: "calendar_icon.svg", label: "Calendar", width: 15, height: 15 },
     { href: "/todo", icon: "todo_icon.svg", label: "Todo", width: 11, height: 11 },
     { href: "/notes", icon: "notes_icon.svg", label: "Notes", width: 13, height: 12 },
-    { href: "/projects", icon: "project_icon.svg", label: "Projects", width: 12, height: 12 },
+    { href: "/projects", icon: "AI.svg", label: "NestMind", width: 15, height: 15 },
     { href: "/settings", icon: "settings_icon.svg", label: "Settings", width: 12, height: 12 },
   ];
 
