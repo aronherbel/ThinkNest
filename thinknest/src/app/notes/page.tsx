@@ -81,9 +81,9 @@ export default function Home() {
     <div className="min-h-screen dark:bg-gray-800">
       <HeaderTitle title="Notes" />
       <div className="flex h-screen">
-        {isEditing ? (
+        {isEditing && selectedPostIt ? (
           <PostItEditor
-            postIt={selectedPostIt!}
+            postIt={selectedPostIt}
             categories={categories}
             onSave={savePostIt}
             onCancel={() => setIsEditing(false)}
