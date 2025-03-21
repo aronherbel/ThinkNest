@@ -4,9 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from 'next/image';
+import { useAuth } from "@/lib/AuthContext";
 
 const NavBar = () => {
   const pathname = usePathname();
+  const { user } = useAuth();
 
   const navItems = [
     { href: "/dashboard", icon: "dashboard_icon.svg", label: "Dashboard", width: 12, height: 12 },
@@ -17,6 +19,8 @@ const NavBar = () => {
     { href: "/settings", icon: "settings_icon.svg", label: "Settings", width: 12, height: 12 },
   ];
 
+  if(!user) return null;
+  
   return (
     <div className="flex justify-center align-items-center mt-5 text-sm background">
       <div className="flex flex-col items-start space-y-4" >

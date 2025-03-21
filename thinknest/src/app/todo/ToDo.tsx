@@ -2,7 +2,7 @@
 
 import HeaderTitle from "@/components/HeaderTitle";
 import { useState, useEffect } from "react";
-import MyTodos from "./components/MyTodos";
+import { useAuth } from "@/lib/AuthContext";
 
 interface EventCategory {
   name: string;
@@ -76,6 +76,10 @@ const ToDo = () => {
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
+
+  const { user } = useAuth();
+  
+  if (!user) return null;
 
   return (
     <div className="min-h-screen">

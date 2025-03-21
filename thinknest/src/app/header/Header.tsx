@@ -2,6 +2,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
 import { useTheme } from "@/lib/ThemeContext";
+import { useAuth } from "@/lib/AuthContext";
 
 const Header: React.FC = () => {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -9,6 +10,7 @@ const Header: React.FC = () => {
   const [userName, setUserName] = useState<string>("John Doe");
   const [mounted, setMounted] = useState(false); // Prüft, ob das Component gemountet wurde
   const pathname = usePathname();
+  const { user } = useAuth();
 
   const lightmode = {
     light: "/assets/icons/sun.svg",
@@ -20,6 +22,8 @@ const Header: React.FC = () => {
     setUserName(localStorage.getItem("userName") || "John Doe");
     setMounted(true); // Erst nach Mounting Icons anzeigen
   }, []);
+
+  if(!user) return null;
 
   return (
     <div className="flex items-center justify-between p-4 pt-6">

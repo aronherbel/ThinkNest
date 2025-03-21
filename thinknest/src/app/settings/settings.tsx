@@ -2,9 +2,10 @@
 
 import HeaderTitle from "@/components/HeaderTitle";
 import React, { useState, useEffect } from "react";
+import LogoutButton from "@/components/LogoutButton";
 
 import Image from 'next/image';
-
+import { useAuth } from "@/lib/AuthContext";
 
 interface SettingsProps {
   isDarkMode: boolean;
@@ -64,6 +65,10 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
+
+  const { user } = useAuth();
+
+  if(!user) return null;
 
   return (
     <div className="settings-container bg-gray-50/60 dark:bg-gray-800 p-5 rounded-lg">
@@ -150,7 +155,7 @@ const Settings: React.FC<SettingsProps> = ({ isDarkMode, setIsDarkMode }) => {
           </div>
         </div>
       </div>
-
+      <LogoutButton />
       {/* Feedback Section */}
       <div className="mt-14">
         <p className="text-2xl mb-3 mt-14">Give us your feedback!</p>

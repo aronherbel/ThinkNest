@@ -8,10 +8,13 @@ import HeaderTitle from "@/components/HeaderTitle";
 import Timer from "@/components/Timer";
 import NotesStat from "./components/NotesStat";
 import ProjectStat from "./components/ProjectStat";
+import { useAuth } from "@/lib/AuthContext";
 
 const Dashboard = () => {
+  const { user } = useAuth();
+  if (!user) return null;
   return (
-    <>
+    <main className="w-full">
       <div className="flex justify-between ">
         <HeaderTitle title="Today" />
         <Timer />
@@ -38,7 +41,7 @@ const Dashboard = () => {
           <ProjectStat />
         </div>
       </div>
-    </>
+    </main>
   );
 };
 
