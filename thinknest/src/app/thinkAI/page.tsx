@@ -1,10 +1,10 @@
 import React from 'react'
-import Projects from '@/app/projects/Projects'
+import ThinkAI from '@/app/thinkAI/ThinkAI'
 
 const ProjectPage = () => {
   return (
     <div>
-      <Projects/>
+      <ThinkAI/>
     </div>
   )
 }
