@@ -94,7 +94,16 @@ const ThinkAI = () => {
               <div className="chat-box-container d-none d-lg-block">
                 <div className="bg-light p-3 rounded shadow chat-box dark:bg-gray-600">
                   {messages.map((msg, index) => (
-                    <div key={index} className={`message ${msg.sender} border-black border`}>
+                    <div
+                      key={index}
+                      className={`message ${msg.sender} border-black dark:border-gray-500 cloud border rounded-lg m-4 p-1`}
+                      style={{
+                        alignSelf: msg.sender === "user" ? "flex-end" : "flex-start",
+                        maxWidth: msg.text.length < 20 ? "fit-content" : "90%",
+                        padding: "10px",
+                        wordBreak: "break-word",
+                      }}
+                    >
                       {msg.sender === "user" ? "You: " : "NestMind: "}
                       {msg.isLoading ? (
                         <span className="loading-text">
@@ -142,4 +151,4 @@ const ThinkAI = () => {
   )
 }
 
-export default ThinkAI; 
+export default ThinkAI;
