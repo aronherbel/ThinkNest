@@ -95,9 +95,9 @@ const colors = [
 ];
 
 return (
-  <div className="mb-10 flex justify-start">
+  <div className="mb-10 flex justify-start ">
     <div className="flex flex-col rounded-xl bg-gray-50 p-6 space-y-7 items-start  dark:bg-sky-950 transition-colors duration-300">
-      <div className="flex justify-between w-full items-center space-x-8">
+      <div className=" flex justify-between w-full items-center space-x-8">
         <p className="text-[1.1rem] font-bold">My Event's</p>
         <div className="flex space-x-4 items-center">
           <Image
@@ -126,7 +126,7 @@ return (
             placeholder="Event name"
             value={eventCategoryName}
             onChange={(e) => setEventCategoryName(e.target.value)}
-            className="p-2 border border-gray-300 rounded-md text-sm"
+            className="p-2 border dark:text-black border-gray-300 rounded-md text-sm"
           />
           <div className="flex space-x-2">
             {colors.map((color) => (
@@ -149,7 +149,7 @@ return (
             </button>
             <button
               type="submit"
-              className="bg-black text-white text-xs px-4 py-2 rounded-md"
+              className="bg-black border-gray-300 text-white text-xs px-4 py-2 rounded-md"
               onClick={handleCreateEventCategory}
             >
               Add

@@ -353,7 +353,7 @@ const Calendar: React.FC = () => {
                 value={newEventTitle}
                 onChange={(e) => setNewEventTitle(e.target.value)}
                 required
-                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                className="border dark:text-black border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
               />
             </div>
 
@@ -371,7 +371,7 @@ const Calendar: React.FC = () => {
                     )
                   }
                   required
-                  className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                  className="border dark:text-black border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
                 />
                 {!isAllDay && (
                   <input
@@ -383,14 +383,14 @@ const Calendar: React.FC = () => {
                       )
                     }
                     required
-                    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                    className="border dark:text-black border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
                   />
                 )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block  text-sm font-medium text-gray-700 mb-1">
                 End Date & Time
               </label>
               <div className="flex gap-4">
@@ -403,7 +403,7 @@ const Calendar: React.FC = () => {
                     )
                   }
                   required
-                  className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                  className="border dark:text-black border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
                 />
                 {!isAllDay && (
                   <input
@@ -413,7 +413,7 @@ const Calendar: React.FC = () => {
                       setEndDate(`${endDate.split("T")[0]}T${e.target.value}`)
                     }
                     required
-                    className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                    className="border dark:text-black border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
                   />
                 )}
               </div>
@@ -439,7 +439,7 @@ const Calendar: React.FC = () => {
                 placeholder="Event Location"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                className="border dark:text-black border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
               />
             </div>
 
@@ -451,7 +451,7 @@ const Calendar: React.FC = () => {
                 placeholder="Event Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="border border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
+                className="border dark:text-black border-gray-300 px-3 py-2 rounded-md text-md focus:outline-none focus:ring-2 focus:ring-[#28AD5E] w-full"
               />
             </div>
 
@@ -480,7 +480,7 @@ const Calendar: React.FC = () => {
               </button>
               <button
                 type="submit"
-                className="bg-black text-white px-6 py-2 rounded-lg"
+                className="bg-black dark:bg-sky-900 text-white dark:text-black px-6 py-2 rounded-lg"
               >
                 Add
               </button>

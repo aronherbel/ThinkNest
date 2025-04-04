@@ -25,7 +25,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ categories, selectedCat
       </button>
 
       {isOpen && (
-        <div className="absolute bg-white border border-gray-300 rounded-md w-full mt-1 shadow-lg z-10 ">
+        <div className="absolute bg-white dark:bg-sky-900 border border-gray-300 dark:border-sky-900 rounded-md w-full mt-1 shadow-lg z-10 ">
           {categories.map((category, index) => (
             <div
               key={index}
