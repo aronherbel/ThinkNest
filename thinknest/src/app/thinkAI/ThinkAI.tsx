@@ -140,7 +140,7 @@ const ThinkAI = () => {
               <div className="button-box mt-2 w-full flex gap-2 flex-1 rounded">
                 <button onClick={() => sendMessage("Wie kann ich effektiver lernen?")} className="flex-grow p-2 bg-green-600 text-black rounded-xl text-rounded">Wie kann ich effektiver lernen?</button>
                 <button onClick={() => sendMessage("Wie kann ich stundenlang konzentriert bleiben?")} className="flex-grow p-2 bg-green-600 text-black rounded-xl">Wie kann ich stundenlang konzentriert bleiben?</button>
-                <button onClick={() => sendMessage("Ich fühle mich alleine 😞 kann ich mit dir reden bitte")} className="flex-grow p-2 bg-green-600 text-black rounded-xl">IIch fühle mich alleine 😞 kann ich mit dir reden bitte</button>
+                <button onClick={() => sendMessage("Ich fühle mich alleine 😞 kann ich mit dir reden bitte")} className="flex-grow p-2 bg-green-600 text-black rounded-xl">Ich fühle mich alleine 😞 kann ich mit dir reden bitte</button>
               </div>
             )}
           </div>
