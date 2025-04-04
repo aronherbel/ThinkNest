@@ -56,12 +56,12 @@ export default function SignupPage() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+                    className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-700 transition-colors"
                   >
                     Registrieren
                   </button>
                   <div className="text-center text-sm">
-                    <a href="/auth/login" className="text-blue-500 hover:text-blue-600">
+                    <a href="/auth/login" className="text-black hover:text-blue-600">
                       Already have an account?
                     </a>
                   </div>
